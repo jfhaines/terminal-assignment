@@ -1,14 +1,14 @@
-class pokeball:
+class Pokeball:
     def __init__(self, catch_chance):
         self.catch_chance = catch_chance
     
-class potion:
+class Potion:
     def __init__(self, uses, amount):
         self.uses = uses
         self.amount = amount
 
-class move_potion(potion):
+class Move_Potion(potion):
     pass
 
-class health_potion(potion):
+class Health_Potion(potion):
     pass

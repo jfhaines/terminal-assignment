@@ -1,6 +1,6 @@
 from random import randint
 
-class map:
+class Map:
     def __init__(self, rows, columns):
         self.grid = []
         for row in range(rows):
