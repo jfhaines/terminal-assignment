@@ -18,7 +18,7 @@ move_list = [
     Move('Flame Burst', 'Fire', 12, 12),
     Move('Hydro Pump', 'Water', 22, 4),
     Move('Water Pulse', 'Water', 15, 7),
-    Move('Wate Gun', 'Water', 12, 12),
+    Move('Water Gun', 'Water', 12, 12),
     Move('Waterfall', 'Water', 19, 6),
     Move('Leaf Blade', 'Grass', 12, 12),
     Move('Giga Drain', 'Grass', 15, 7),
