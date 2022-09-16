@@ -50,7 +50,7 @@ class Pokemon:
                 continue
             else: 
                 break
-        return [move1.name, move2.name]
+        return [move1, move2]
 
     @classmethod
     def generate(cls):
@@ -66,5 +66,3 @@ class Pokemon:
         self.remaining_health = total_health
         self.attack = attack
         self.move_list = move_list
-
-print(Pokemon.generate().__dict__)
