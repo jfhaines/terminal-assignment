@@ -7,7 +7,7 @@ class Map:
             self.grid.append([])
         for row in self.grid:
             for column in range(columns):
-                row.append('_')
+                row.append(' ')
 
     def display(self):
         for row in self.grid:
@@ -24,10 +24,10 @@ class Map:
                 elif num <= 24:
                     row[i] = '*'
                 elif num <= 28:
-                    row[i] = '$'
+                    row[i] = '?'
                 elif num <= 30:
-                    row[i] = 'T'
+                    row[i] = '!'
 
-pokemon_map = map(7, 7)
+pokemon_map = Map(7, 7)
 pokemon_map.randomise()
 pokemon_map.display()

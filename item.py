@@ -22,7 +22,7 @@ class Potion:
         self.amount = amount
 
 
-class Move_Potion(Potion):
+class MovePotion(Potion):
     uses_range = [1, 3]
     amount_range = [4, 15]
     
@@ -43,7 +43,7 @@ class Move_Potion(Potion):
         self.type = 'Move Potion'
 
 
-class Health_Potion(Potion):
+class HealthPotion(Potion):
     uses_range = [1, 3]
     amount_range = [60, 160]
 
@@ -63,4 +63,12 @@ class Health_Potion(Potion):
         super().__init__(uses, amount)
         self.type = 'Health Potion'
 
-print(Pokeball.generate().__dict__)
+
+def generate_item():
+    rand_num = randint(1, 4)
+    if rand_num == 1:
+        return HealthPotion.generate()
+    elif rand_num == 2:
+        return MovePotion.generate()
+    else:
+        return Pokeball.generate()
