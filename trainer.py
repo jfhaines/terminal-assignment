@@ -10,7 +10,7 @@ class Trainer:
         self.pokemon_list = pokemon
 
 
-class NPC_Trainer(Trainer):
+class NpcTrainer(Trainer):
     @classmethod
     def __generate_random_pokemon_list(cls, num):
         pokemon_list = []
@@ -22,7 +22,13 @@ class NPC_Trainer(Trainer):
     def generate(cls):
         return cls(names.get_first_name(), cls.__generate_random_pokemon_list(randint(1, 3)))
 
+
 class Player(Trainer):
-    def __init__(self, name, pokemon, items):
+    @classmethod
+    def generate(cls):
+        return cls(input('What is your player name? '), [0, 0], [], {'poke_balls': {}, 'health_potions': {}, 'move_potions': {}})
+
+    def __init__(self, name, position, pokemon, items):
         super().__init__(name, pokemon)
-        self.item_list = items
+        self.items = items
+        self.position = position
