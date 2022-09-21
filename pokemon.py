@@ -10,6 +10,9 @@ class Pokemon:
     def __get_random_pokemon_name(cls):
         rand_num = randint(0, len(pokemon_data.keys()) - 1)
         return list(pokemon_data.keys())[rand_num]
+    
+    def __repr__(self):
+        return f'{self.name}'
 
     @classmethod
     def generate(cls):
@@ -96,3 +99,17 @@ class Pokemon:
         move.remaining_pp -= 1
         print (f"{self.name} used {move.name} dealing {damage} damage. {defending_pokemon.name} has {defending_pokemon.remaining_hp}/{defending_pokemon.hp} hp remaining.")
 
+    @property
+    def available_moves(self):
+        available = []
+        for move in self.moves:
+            if move.remaining_pp > 0:
+                available.append(move)
+        return available
+    
+    @property
+    def available_moves_str(self):
+        list_store = list(enumerate(self.available_moves))
+        for index, move in list_store:
+            list_store[index] = f'{index} = {move}'
+        return ', '.join(list_store)

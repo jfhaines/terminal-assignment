@@ -33,7 +33,7 @@ class Move:
         self.__remaining_pp = pp
 
     def __repr__(self):
-        return f'Move(name: {self.name}, power: {self.power}, pp: {self.pp}, remaining_pp: {self.remaining_pp})'
+        return f'{self.name} (power: {self.power}, pp: {self.remaining_pp}/{self.pp})'
 
     # name
     @property

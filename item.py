@@ -5,20 +5,12 @@ class Item:
     @classmethod
     def generate(cls):
         rand_num = randint(1, 20)
-        if rand_num <= 4:
+        if rand_num <= 10:
             return PokeBall()
-        elif rand_num <= 6:
-            return GreatBall()
-        elif rand_num <= 8:
-            return UltraBall()
-        elif rand_num <= 12:
+        elif rand_num <= 15:
             return HealthPotion()
-        elif rand_num <= 14:
-            return SuperHealthPotion()
-        elif rand_num <= 18:
-            return MovePotion()
         else:
-            return SuperMovePotion()
+            return MovePotion()
     
     def __init__(self):
         self.__display_str = '?'
@@ -36,11 +28,14 @@ class Item:
 
 
 class PokeBall(Item):
+    name = "Poke Ball"
+
     def __init__(self):
         super().__init__()
-        self.__catch_chance = 0.2
-        self.__type = 'Poke Ball'
-        self.__name = 'Poke Ball'
+        self.__catch_chance = 0.3
+    
+    def __repr__(self):
+        return f'{self.name} (used to catch Pokemon)'
     
     # catch chance
     @property
@@ -51,59 +46,28 @@ class PokeBall(Item):
     def catch_chance(self, catch_chance):
         self.__catch_chance = catch_chance
     
-    # type
-    @property
-    def type(self):
-        return self.__type
-    
-    @type.setter
-    def type(self, type):
-        self.__type = type
-    
-    # name
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, name):
-        self.__name = name
-    
-
-    def use(self, pokemon):
+    def use(self, pokemon, player, map, item_position):
         rand_num = random()
         health_remaining_factor = (pokemon.hp - pokemon.remaining_hp) / pokemon.hp / 2
-        if rand_num > self.catch_chance + (health_remaining_factor):
-            return False
+        if rand_num <= self.catch_chance + (health_remaining_factor):
+            player.pokemon.add(pokemon)
+            map.set(item_position, None)
+            print(f'Caught {pokemon.name}.')
+            return
         else:
-            return True
-
-
-
-class GreatBall(PokeBall):
-    def __init__(self):
-        super().__init__()
-        self.catch_chance = 0.4
-        self.name = 'Great Ball'
-
-
-
-class UltraBall(PokeBall):
-    def __init__(self):
-        super().__init__()
-        self.catch_chance = 0.6
-        self.name = 'Ultra Ball'
-
-
-
+            print(f'Failed to catch {pokemon.name}.')
+            return
 
 
 class HealthPotion(Item):
+    name = 'Health Potion'
+
     def __init__(self):
         super().__init__()
-        self.__amount = 30
-        self.__type = 'Health Potion'
-        self.__name = 'Health Potion'
+        self.__amount = 40
+    
+    def __repr__(self):
+        return f'{self.name} (restores {self.__amount} hp for selected pokemon)'
     
     # amount
     @property
@@ -113,43 +77,21 @@ class HealthPotion(Item):
     @amount.setter
     def amount(self, amount):
         self.__amount = amount
-
-     # type
-    @property
-    def type(self):
-        return self.__type
-    
-    @type.setter
-    def type(self, type):
-        self.__type = type
-    
-    # name
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, name):
-        self.__name = name
-
 
     def use(self, pokemon):
         pokemon.remaining_hp = pokemon.remaining_hp + self.amount if (pokemon.remaining_hp + self.amount) <= pokemon.hp else pokemon.hp
 
-class SuperHealthPotion(HealthPotion):
-    def __init__(self):
-        super().__init__()
-        self.amount = 60
-        self.name = 'Super Health Potion'
-
 
 
 class MovePotion(Item):
+    name = 'Move Potion'
+
     def __init__(self):
         super().__init__()
-        self.__amount = 8
-        self.__type = 'Move Potion'
-        self.__name = 'Move Potion'
+        self.__amount = 10
+    
+    def __repr__(self):
+        return f'{self.name} (restores {self.__amount} pp for selected move)'
     
     # amount
     @property
@@ -160,33 +102,8 @@ class MovePotion(Item):
     def amount(self, amount):
         self.__amount = amount
 
-     # type
-    @property
-    def type(self):
-        return self.__type
     
-    @type.setter
-    def type(self, type):
-        self.__type = type
-    
-    # name
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, name):
-        self.__name = name
-    
-    def use(self, move):
-        move.remaining_pp = move.remaining_pp + self.amount if (move.remaining_pp + self.amount) <= move.pp else move.pp
-
-
-class SuperMovePotion(MovePotion):
-    def __init__(self):
-        super().__init__()
-        self.amount = 20
-        self.name = 'Super Move Potion'
-
-
-
+    def use(self, pokemon):
+        move_index = int(input(f"Use which move? {pokemon.available_moves_str}"))
+        move = pokemon.available_moves[move_index]
+        move.remaining_pp = (move.remaining_pp + self.amount) if (move.remaining_pp + self.amount) <= move.pp else move.pp
