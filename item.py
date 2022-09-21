@@ -46,12 +46,11 @@ class PokeBall(Item):
     def catch_chance(self, catch_chance):
         self.__catch_chance = catch_chance
     
-    def use(self, pokemon, player, map, item_position):
+    def use(self, pokemon, player):
         rand_num = random()
         health_remaining_factor = (pokemon.hp - pokemon.remaining_hp) / pokemon.hp / 2
         if rand_num <= self.catch_chance + (health_remaining_factor):
             player.pokemon.add(pokemon)
-            map.set(item_position, None)
             print(f'Caught {pokemon.name}.')
             return
         else:

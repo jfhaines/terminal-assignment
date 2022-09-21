@@ -99,8 +99,8 @@ class PokeBallContainer(Container):
     def __init__(self):
         super().__init__(PokeBall)
     
-    def use(self, pokemon, player, map, item_position):
-        self.get.use(pokemon, player, map, item_position)
+    def use(self, pokemon, player):
+        self.get.use(pokemon, player)
         self.collection.pop()
 
 class HealthPotionContainer(Container):
@@ -248,7 +248,7 @@ class Player(Trainer):
         self.pokemon.switch(index)
         print(f"Switched to {self.pokemon.active.name}.")
 
-    def __use_item(self, my_pokemon, opponent_pokemon = None, map = None, pokemon_position = None):
+    def __use_item(self, my_pokemon, opponent_pokemon = None):
         is_catchable = bool(opponent_pokemon)
         while True:
             if len(self.items.available) == 0:
@@ -264,7 +264,7 @@ class Player(Trainer):
                 continue
             else:
                 if item_type.type == PokeBall:
-                    item_type.use(opponent_pokemon, self, map, pokemon_position)
+                    item_type.use(opponent_pokemon, self)
                 else:
                     item_type.use(my_pokemon)
                 print(f'Used {item_type.type.name}.')
@@ -272,9 +272,8 @@ class Player(Trainer):
                 break
 
 
-    def pokemon_battle(self, opponent_pokemon, map = None, pokemon_position = None):
+    def pokemon_battle(self, opponent_pokemon, is_catchable):
         my_pokemon = self.pokemon.active
-        is_catchable = bool(map)
         print(f'Your selected pokemon is {my_pokemon.name}. You are facing {opponent_pokemon.name}.')
         while True:
             my_pokemon = self.pokemon.active
@@ -282,7 +281,7 @@ class Player(Trainer):
             option = int(input('What action to take? (0 = Use move, 1 = Use item, 2 = Switch Pokemon: '))
             if option == 1:
                 if is_catchable:
-                    self.__use_item(my_pokemon, opponent_pokemon, map, pokemon_position)
+                    self.__use_item(my_pokemon, opponent_pokemon)
                     continue
                 else:
                     self.__use_item(my_pokemon)
@@ -304,30 +303,43 @@ class Player(Trainer):
                 print(f'{opponent_pokemon.name} beat {my_pokemon.name}.')
                 return False
 
+    def __change_square(self, map, new_position):
+        map.set(new_position, self)
+        map.set(self.position, None if not isinstance(map.get(self.position).former_val, Pokemon) else Pokemon.generate())
+        self.position = new_position
 
 
     def move(self, map):
-        direction = input('What direction do you want to move? (l = Left, r = Right, u = Up, d = Down: ')
+        while True:
+            direction = input('What direction do you want to move? (l = Left, r = Right, u = Up, d = Down: ')
 
-        if direction == 'l':
-            new_position = [self.position[0], self.position[1] - 1]
-        
-        elif direction == 'r':
-            new_position = [self.position[0], self.position[1] + 1]
-        
-        elif direction == 'u':
-            new_position = [self.position[0] - 1, self.position[1]]
+            if direction == 'l':
+                new_position = [self.position[0], self.position[1] - 1]
+            
+            elif direction == 'r':
+                new_position = [self.position[0], self.position[1] + 1]
+            
+            elif direction == 'u':
+                new_position = [self.position[0] - 1, self.position[1]]
 
-        elif direction == 'd':
-            new_position = [self.position[0] + 1, self.position[1]]
-        
-        adj_square = map.get(new_position)
+            elif direction == 'd':
+                new_position = [self.position[0] + 1, self.position[1]]
+            
+            adj_square = map.get(new_position)
 
-        if isinstance(adj_square.current_value, Item):
-            self.pickup_item(adj_square.current_value, map, new_position)
-        
-        elif isinstance(adj_square.current_value, NpcTrainer):
-            pass
+            if isinstance(adj_square.current_value, Item):
+                self.pickup_item(adj_square.current_value, map, new_position)
+                map.display()
+                continue
+            
+            elif isinstance(adj_square.current_value, Pokemon):
+                self.__change_square(map, new_position)
+                rand_num = randint(1, 3)
+                if rand_num == 1:
+                    self.pokemon_battle(map.get(self.position).former_value, True)
+            
+            elif isinstance(adj_square.current_value, NpcTrainer):
+                pass
 
 
 
