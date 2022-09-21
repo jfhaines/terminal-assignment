@@ -17,19 +17,14 @@ class Move:
             if rand_num not in indexes:
                 indexes.append(rand_num)
         
-        moves = {}
+        moves = []
         for index in indexes:
             move_name = available_moves[index]
             move_power = move_data[move_name]['power']
             move_pp = move_data[move_name]['pp']
-            moves[available_moves[index]] = cls(move_name, move_power, move_pp)
+            moves.append(cls(move_name, move_power, move_pp))
         
         return moves
-
-
-
-
-
 
     def __init__(self, name, power, pp):
         self.__name = name

@@ -5,21 +5,6 @@ from moves import Move
 import pokebase as pb
 
 
-def get_moves(num, pokemon):
-    moves = {}
-    number_of_available_moves = len(pokemon['info']['moves'])
-
-    while len(moves.keys()) < num:
-        rand_num = randint(0, number_of_available_moves - 1)
-        move_name = pokemon['info']['moves'][rand_num]
-        if move_name in move_data.keys() and move_name not in moves.keys():
-            move_details = move_data[move_name]
-            moves[move_name] = move_details
-
-    return moves
-
-
-
 class Pokemon:
     @classmethod
     def __get_random_pokemon_name(cls):
@@ -39,6 +24,7 @@ class Pokemon:
         self.__attack = attack
         self.__defense = defense
         self.__moves = moves
+        self.__display_str = '*'
 
     # name
     @property
@@ -93,20 +79,20 @@ class Pokemon:
     @moves.setter
     def moves(self, moves):
         self.__moves = moves
+
+    # display string
+    @property
+    def display_str(self):
+        return self.__display_str
+    
+    @display_str.setter
+    def display_str(self, display_str):
+        self.__display_str = display_str
+    
     
     def use_move(self, move, defending_pokemon):
         damage = (((((((2 * 20/5 + 2) * self.attack * move.power) / defending_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255)
         defending_pokemon.remaining_hp = 0 if damage > defending_pokemon.remaining_hp else defending_pokemon.remaining_hp - damage
         move.remaining_pp -= 1
-        print(damage)
+        print (f"{self.name} used {move.name} dealing {damage} damage. {defending_pokemon.name} has {defending_pokemon.remaining_hp}/{defending_pokemon.hp} hp remaining.")
 
-
-
-p1 = Pokemon.generate()
-p2 = Pokemon.generate()
-move = p1.moves[list(p1.moves.keys())[0]]
-
-p1.use_move(move, p2)
-
-print(p1.name, p1.attack, move.power, p2.name, p2.defense)
-print(p2.hp, p2.remaining_hp)
