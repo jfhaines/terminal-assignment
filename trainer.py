@@ -185,6 +185,9 @@ class Trainer:
         self.__pokemon = pokemon
         self.__display_str = '!'
     
+    def __repr__(self):
+        return self.name
+
     # name
     @property
     def name(self):
@@ -477,7 +480,7 @@ class Player(Trainer):
                     continue
                 
                 elif isinstance(adj_square.current_val, NpcTrainer):
-                    if self.trainer_battle(NpcTrainer) == 'Won':
+                    if self.trainer_battle(adj_square.current_val) == 'Won':
                         map.set(adj_square.current_val, None)
                     map.display()
                     continue
