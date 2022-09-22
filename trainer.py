@@ -100,8 +100,12 @@ class PokeBallContainer(Container):
         super().__init__(PokeBall)
     
     def use(self, pokemon, player):
-        self.get.use(pokemon, player)
+        caught = self.get.use(pokemon, player)
         self.collection.pop()
+        if caught == True:
+            return True
+        else:
+            return False
 
 class HealthPotionContainer(Container):
     def __init__(self):
@@ -118,6 +122,12 @@ class PokemonCollection():
     def __init__(self):
         self.__collection = []
     
+    def __repr__(self):
+        pokemon_list = []
+        for pokemon in self.__collection:
+            pokemon_list.append(str(pokemon))
+        return f"{', '.join(pokemon_list)}"
+    
     def add(self, pokemon):
         self.__collection.append(pokemon)
     
@@ -127,7 +137,6 @@ class PokemonCollection():
         for pokemon in self.__collection:
             if pokemon.remaining_hp > 0:
                 available.append(pokemon)
-        print(available)
         return available
     
     @property
@@ -142,13 +151,17 @@ class PokemonCollection():
         return self.__collection
 
     def switch(self, index):
-        pokemon = self.__collection[index]
-        self.__collection.pop(index)
+        pokemon = self.available[index]
+        self.__collection.remove(pokemon)
         self.__collection.insert(0, pokemon)
     
     @property
     def active(self):
-        return self.__collection[0]
+        return self.available[0]
+    
+    @property
+    def count_available(self):
+        return len(self.available)
 
 
     
@@ -211,6 +224,7 @@ class Player(Trainer):
         self.__items = items
         self.__position = position
         self.display_str = '@'
+        self.pokemon.add(Pokemon.generate())
     
     # items
     @property
@@ -232,8 +246,13 @@ class Player(Trainer):
     
     
     def pickup_item(self, item, map, item_position):
-        self.items.pickup(item)
-        map.set(item_position, None)
+        user_input = input('Do you want to pickup {item.name}? (y | n)')
+        if user_input == 'n':
+            return
+        elif user_input == 'y':
+            self.items.pickup(item)
+            map.set(item_position, None)
+            print(f'You picked up {item.name}. Item bag: {self.items}.')
     
     def __attack_opponent(self, my_pokemon, opponent_pokemon):
         move_index = int(input(f"Use which move? {my_pokemon.available_moves_str}: "))
@@ -253,10 +272,10 @@ class Player(Trainer):
         while True:
             if len(self.items.available) == 0:
                 print('No available items')
-                break
+                return
             if not is_catchable and len(self.items.available) == 1 and self.items.available[0].type == PokeBall:
                 print('No available items.')
-                break
+                return
             item_index = int(input(f"Which item to use? {self.items.available_str}: "))
             item_type = self.items.available[item_index]
             if item_type.type == PokeBall and not is_catchable:
@@ -264,30 +283,42 @@ class Player(Trainer):
                 continue
             else:
                 if item_type.type == PokeBall:
-                    item_type.use(opponent_pokemon, self)
+                    caught = item_type.use(opponent_pokemon, self)
                 else:
                     item_type.use(my_pokemon)
+                    caught = False
                 print(f'Used {item_type.type.name}.')
                 print(self.items)
-                break
+                return caught
 
 
     def pokemon_battle(self, opponent_pokemon, is_catchable):
         my_pokemon = self.pokemon.active
-        print(f'Your selected pokemon is {my_pokemon.name}. You are facing {opponent_pokemon.name}.')
+        print(f'Your selected pokemon is {my_pokemon}. You are facing {opponent_pokemon}.')
         while True:
             my_pokemon = self.pokemon.active
 
-            option = int(input('What action to take? (0 = Use move, 1 = Use item, 2 = Switch Pokemon: '))
+            option = int(input('What action to take? (0 = Use move, 1 = Use item, 2 = Switch Pokemon, 3 = Exit battle, 4 = Show items, 5 = Show Pokemon: '))
             if option == 1:
                 if is_catchable:
-                    self.__use_item(my_pokemon, opponent_pokemon)
-                    continue
+                    caught = self.__use_item(my_pokemon, opponent_pokemon)
+                    if caught == True:
+                        return 'Exit'
+                    else:
+                        continue
                 else:
                     self.__use_item(my_pokemon)
                     continue
             elif option == 2:
                 self.switch_pokemon()
+                continue
+            elif option == 3:
+                return 'Exit'
+            elif option == 4:
+                print(self.items)
+                continue
+            elif option == 5:
+                print(self.pokemon)
                 continue
             
 
@@ -295,13 +326,37 @@ class Player(Trainer):
 
             if opponent_pokemon.remaining_hp == 0:
                 print(f'{my_pokemon.name} beat {opponent_pokemon.name}.')
-                return True
+                return 'Won'
         
             self.__get_attacked(my_pokemon, opponent_pokemon)
 
             if my_pokemon.remaining_hp == 0:
                 print(f'{opponent_pokemon.name} beat {my_pokemon.name}.')
-                return False
+                return 'Lost'
+    
+    def trainer_battle(self, trainer):
+        user_input = input(f'Would you like to battle Pokemon Trainer {trainer.name}? (y | n): ')
+        if user_input == 'n':
+            return
+        else:
+            if self.pokemon.count_available == 0:
+                print("You don't have any available Pokemon. You can't battle.")
+                return
+            elif trainer.pokemon.count_available == 0:
+                print(f"Pokemon Trainer {trainer.name} has no available Pokemon. You can't battle.")
+                return
+            while True:
+                result = self.pokemon_battle(trainer.pokemon.active, False)
+                if result == 'Exit':
+                    return 'Exit'
+
+                if self.pokemon.count_available == 0:
+                    print(f'You have been defeated by {trainer.name}. You have no available Pokemon left.')
+                    return 'Lost'
+                
+                if trainer.pokemon.count_available == 0:
+                    print(f'You have won against {trainer.name}. They have no Pokemon remaining.')
+                    return 'Won'
 
     def __change_square(self, map, new_position):
         map.set(new_position, self)
@@ -311,35 +366,58 @@ class Player(Trainer):
 
     def move(self, map):
         while True:
-            direction = input('What direction do you want to move? (l = Left, r = Right, u = Up, d = Down: ')
+            action = input('What do you want to do? (a = Move Left, d = Move Right, w = Move Up, s = Move Down, i = Show Items, p = Show Pokemon: ')
 
-            if direction == 'l':
+            if action == 'i':
+                print(self.items)
+                map.display()
+                continue
+
+            elif action == 'p':
+                print(self.pokemon)
+                map.display()
+                continue
+
+            elif action == 'a':
                 new_position = [self.position[0], self.position[1] - 1]
             
-            elif direction == 'r':
+            elif action == 'd':
                 new_position = [self.position[0], self.position[1] + 1]
             
-            elif direction == 'u':
+            elif action == 'w':
                 new_position = [self.position[0] - 1, self.position[1]]
 
-            elif direction == 'd':
+            elif action == 's':
                 new_position = [self.position[0] + 1, self.position[1]]
             
             adj_square = map.get(new_position)
 
-            if isinstance(adj_square.current_value, Item):
-                self.pickup_item(adj_square.current_value, map, new_position)
+            if isinstance(adj_square.current_val, Item):
+                self.pickup_item(adj_square.current_val, map, new_position)
                 map.display()
                 continue
             
-            elif isinstance(adj_square.current_value, Pokemon):
+            elif isinstance(adj_square.current_val, Pokemon):
                 self.__change_square(map, new_position)
+                map.display()
                 rand_num = randint(1, 3)
                 if rand_num == 1:
-                    self.pokemon_battle(map.get(self.position).former_value, True)
+                    print('A wild {map.get(self.position).former_val} appeared.')
+                    self.pokemon_battle(map.get(self.position).former_val, True)
+                continue
             
-            elif isinstance(adj_square.current_value, NpcTrainer):
-                pass
+            elif isinstance(adj_square.current_val, NpcTrainer):
+                if self.trainer_battle(NpcTrainer) == 'Won':
+                    map.set(adj_square.current_val, None)
+                map.display()
+                continue
+            
+            elif adj_square.current_val == None:
+                self.__change_square(map, new_position)
+                map.display()
+                continue
+            
+
 
 
 

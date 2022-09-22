@@ -12,7 +12,7 @@ class Pokemon:
         return list(pokemon_data.keys())[rand_num]
     
     def __repr__(self):
-        return f'{self.name}'
+        return f"{' '.join(self.name.split('-')).capitalize()} (HP: {self.remaining_hp}/{self.hp}, Attack: {self.attack}, Defense: {self.defense})"
 
     @classmethod
     def generate(cls):
@@ -94,7 +94,7 @@ class Pokemon:
     
     
     def use_move(self, move, defending_pokemon):
-        damage = (((((((2 * 20/5 + 2) * self.attack * move.power) / defending_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255)
+        damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / defending_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
         defending_pokemon.remaining_hp = 0 if damage > defending_pokemon.remaining_hp else defending_pokemon.remaining_hp - damage
         move.remaining_pp -= 1
         print (f"{self.name} used {move.name} dealing {damage} damage. {defending_pokemon.name} has {defending_pokemon.remaining_hp}/{defending_pokemon.hp} hp remaining.")

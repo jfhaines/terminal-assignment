@@ -67,10 +67,16 @@ class Map:
         
 
     def display(self):
+        for col in self.grid[0]:
+            print('----', end='')
+        print('---\n')
         for row in self.grid:
             for square in row:
                 print(square, end='    ')
             print('\n')
+        for col in self.grid[0]:
+            print('----', end='')
+        print('---\n')
     
     def clear_square(self, coordinates):
         self.set(coordinates, None)

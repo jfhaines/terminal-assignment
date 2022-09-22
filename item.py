@@ -5,9 +5,9 @@ class Item:
     @classmethod
     def generate(cls):
         rand_num = randint(1, 20)
-        if rand_num <= 10:
+        if rand_num <= 9:
             return PokeBall()
-        elif rand_num <= 15:
+        elif rand_num <= 17:
             return HealthPotion()
         else:
             return MovePotion()
@@ -52,10 +52,10 @@ class PokeBall(Item):
         if rand_num <= self.catch_chance + (health_remaining_factor):
             player.pokemon.add(pokemon)
             print(f'Caught {pokemon.name}.')
-            return
+            return True
         else:
             print(f'Failed to catch {pokemon.name}.')
-            return
+            return False
 
 
 class HealthPotion(Item):
