@@ -481,7 +481,7 @@ class Player(Trainer):
                 
                 elif isinstance(adj_square.current_val, NpcTrainer):
                     if self.trainer_battle(adj_square.current_val) == 'Won':
-                        map.set(adj_square.current_val, None)
+                        map.set(new_position, None)
                     map.display()
                     continue
                 
