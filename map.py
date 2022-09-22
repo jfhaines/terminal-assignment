@@ -9,7 +9,7 @@ class Square:
         num = randint(1, 30)
         if num <= 15:
             return cls(None, None)
-        elif num <= 24:
+        elif num <= 21:
             return cls(Pokemon.generate(), None)
         elif num <= 28:
             return cls(Item.generate(), None)
