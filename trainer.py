@@ -5,13 +5,7 @@ import pypokedex as pokedex
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
 from custom_exceptions import InputError
-
-def get_index(prompt, item_list):
-    user_input = input(prompt)
-    if user_input.isdigit() and int(user_input) >= 0 and int(user_input) < len(item_list):
-        return int(user_input)
-    else:
-        raise InputError(user_input)
+from utility import get_index
 
 
 class ItemBag:
@@ -277,16 +271,6 @@ class Player(Trainer):
             except InputError as err:
                 print(err.user_message)
     
-
-    def __attack_opponent(self, my_pokemon, opponent_pokemon):
-        while True:
-            try:
-                move_index = get_index(f"Use which move? {my_pokemon.available_moves_str}: ", my_pokemon.available_moves)
-            except InputError as err:
-                print(err.user_message)
-            else:
-                my_pokemon.use_move(my_pokemon.available_moves[move_index], opponent_pokemon)
-                break
     
     def __get_attacked(self, my_pokemon, opponent_pokemon):
         rand_index = randint(0, len(opponent_pokemon.available_moves) - 1)
@@ -341,7 +325,7 @@ class Player(Trainer):
             option = input('What action to take? (0 = Use move, 1 = Use item, 2 = Switch Pokemon, 3 = Exit battle, 4 = Show items, 5 = Show Pokemon: ')
             try:
                 if option == '0':
-                    self.__attack_opponent(my_pokemon, opponent_pokemon)
+                    my_pokemon.use_move(opponent_pokemon)
 
                     if opponent_pokemon.remaining_hp == 0:
                         print(f'{my_pokemon.name} beat {opponent_pokemon.name}.')

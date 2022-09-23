@@ -3,6 +3,8 @@ from import_json import pokemon_data, move_data
 from random import randint, uniform
 from moves import Move
 import pokebase as pb
+from custom_exceptions import InputError
+from utility import get_index
 
 
 class Pokemon:
@@ -93,11 +95,19 @@ class Pokemon:
         self.__display_str = display_str
     
     
-    def use_move(self, move, defending_pokemon):
-        damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / defending_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
-        defending_pokemon.remaining_hp = 0 if damage > defending_pokemon.remaining_hp else defending_pokemon.remaining_hp - damage
-        move.remaining_pp -= 1
-        print (f"{self.name} used {move.name} dealing {damage} damage. {defending_pokemon.name} has {defending_pokemon.remaining_hp}/{defending_pokemon.hp} hp remaining.")
+    def use_move(self, defending_pokemon):
+        while True:
+            try:
+                move_index = get_index(f"Use which move? {self.available_moves_str}: ", self.available_moves)
+            except InputError as err:
+                print(err.user_message)
+            else:
+                move = self.available_moves[move_index]
+                damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / defending_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
+                defending_pokemon.remaining_hp = 0 if damage > defending_pokemon.remaining_hp else defending_pokemon.remaining_hp - damage
+                move.remaining_pp -= 1
+                print (f"{self.name} used {move.name} dealing {damage} damage. {defending_pokemon.name} has {defending_pokemon.remaining_hp}/{defending_pokemon.hp} hp remaining.")
+                break
 
     @property
     def available_moves(self):
