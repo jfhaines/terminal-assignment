@@ -26,7 +26,19 @@ class ItemBag:
     def move_potions(self):
         return self.__move_potions
     
-    def pickup(self, item):
+    def pickup(self, item, map, item_position):
+        while True:
+            try:
+                user_input = input('Do you want to pickup {item.name}? (y | n) ')
+                if user_input == 'n':
+                    return
+                elif user_input == 'y':
+                    break
+                else:
+                    raise InputError(user_input)
+            except InputError as err:
+                print(err.user_message)
+
         if isinstance(item, PokeBall):
             self.pokeballs.add(item)
         
@@ -35,6 +47,10 @@ class ItemBag:
         
         elif isinstance(item, MovePotion):
             self.move_potions.add(item)
+
+        map.set(item_position, None)
+        print(f'You picked up {item.name}. Item bag: {self}.')
+
     
     def available(self, is_catchable):
         available = []

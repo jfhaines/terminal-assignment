@@ -93,23 +93,6 @@ class Player(Trainer):
     def position(self, position):
         self.__position = position
     
-    
-    def pickup_item(self, item, map, item_position):
-        while True:
-            try:
-                user_input = input('Do you want to pickup {item.name}? (y | n) ')
-                if user_input == 'n':
-                    return
-                elif user_input == 'y':
-                    self.items.pickup(item)
-                    map.set(item_position, None)
-                    print(f'You picked up {item.name}. Item bag: {self.items}.')
-                    return
-                else:
-                    raise InputError(user_input)
-
-            except InputError as err:
-                print(err.user_message)
         
     def switch_pokemon(self):
         while True:
