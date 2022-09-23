@@ -95,19 +95,21 @@ class Pokemon:
         self.__display_str = display_str
     
     
-    def use_move(self, defending_pokemon):
-        while True:
-            try:
-                move_index = get_index(f"Use which move? {self.available_moves_str}: ", self.available_moves)
-            except InputError as err:
-                print(err.user_message)
-            else:
-                move = self.available_moves[move_index]
-                damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / defending_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
-                defending_pokemon.remaining_hp = 0 if damage > defending_pokemon.remaining_hp else defending_pokemon.remaining_hp - damage
-                move.remaining_pp -= 1
-                print (f"{self.name} used {move.name} dealing {damage} damage. {defending_pokemon.name} has {defending_pokemon.remaining_hp}/{defending_pokemon.hp} hp remaining.")
-                break
+    def use_move(self, opponent_pokemon, attacking_pokemon_is_npc=False):
+        if attacking_pokemon_is_npc:
+            move_index = randint(0, len(opponent_pokemon.available_moves) - 1)
+        else:
+            while True:
+                try:
+                    move_index = get_index(f"Use which move? {self.available_moves_str}: ", self.available_moves)
+                    break
+                except InputError as err:
+                    print(err.user_message)
+        move = self.available_moves[move_index]
+        damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / opponent_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
+        opponent_pokemon.remaining_hp = 0 if damage > opponent_pokemon.remaining_hp else opponent_pokemon.remaining_hp - damage
+        move.remaining_pp -= 1
+        print (f"{self.name} used {move.name} dealing {damage} damage. {opponent_pokemon.name} has {opponent_pokemon.remaining_hp}/{opponent_pokemon.hp} hp remaining.")
 
     @property
     def available_moves(self):

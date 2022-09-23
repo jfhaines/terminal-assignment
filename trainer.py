@@ -110,11 +110,6 @@ class Player(Trainer):
 
             except InputError as err:
                 print(err.user_message)
-    
-    
-    def __get_attacked(self, my_pokemon, opponent_pokemon):
-        rand_index = randint(0, len(opponent_pokemon.available_moves) - 1)
-        opponent_pokemon.use_move(opponent_pokemon.available_moves[rand_index], my_pokemon)
         
     def switch_pokemon(self):
         while True:
@@ -140,7 +135,7 @@ class Player(Trainer):
                         print(f'{my_pokemon.name} beat {opponent_pokemon.name}.')
                         return 'Won'
             
-                    self.__get_attacked(my_pokemon, opponent_pokemon)
+                    opponent_pokemon.use_move(my_pokemon, True)
 
                     if my_pokemon.remaining_hp == 0:
                         print(f'{opponent_pokemon.name} beat {my_pokemon.name}.')
