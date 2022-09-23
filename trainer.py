@@ -4,6 +4,7 @@ import names
 import pypokedex as pokedex
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
+from custom_exceptions import InputError
 
 def get_index(prompt, item_list):
     user_input = input(prompt)
@@ -11,11 +12,6 @@ def get_index(prompt, item_list):
         return int(user_input)
     else:
         raise InputError(user_input)
-
-class InputError(Exception):
-    def __init__(self, user_input):
-        super().__init__()
-        self.user_message = f"Invalid input: '{user_input}'. Please try again."
 
 
 class ItemBag:
@@ -25,7 +21,7 @@ class ItemBag:
         self.__move_potions = MovePotionContainer()
     
     def __repr__(self):
-        return f'{self.pokeballs.type.name}: {self.pokeballs.count} remaining, {self.health_potions.type.name}: {self.health_potions.count} remaining & {self.move_potions.type.name}: {self.move_potions.count} remaining'
+        return f'{self.pokeballs.type.name}: {self.pokeballs.count} remaining, {self.health_potions.type.name}: {self.health_potions.count} remaining, {self.move_potions.type.name}: {self.move_potions.count} remaining'
 
     @property
     def pokeballs(self):
