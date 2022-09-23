@@ -6,7 +6,7 @@ import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
 from custom_exceptions import InputError
 from utility import get_index
-from bag import ItemBag, Container, PokemonCollection
+from bag import ItemBag, PokemonCollection
 
 
 class Trainer:
@@ -93,17 +93,6 @@ class Player(Trainer):
     def position(self, position):
         self.__position = position
     
-        
-    def switch_pokemon(self):
-        while True:
-            try:
-                index = get_index(f"Which Pokemon do you want to use? {self.pokemon.available_str}: ", self.pokemon.available)
-            except InputError as err:
-                print(err.user_message)
-            else:
-                self.pokemon.switch(index)
-                print(f"Switched to {self.pokemon.active.name}.")
-                break
 
     def pokemon_battle(self, opponent_pokemon, is_catchable):
         print(f'Your selected pokemon is {self.pokemon.active}. You are facing {opponent_pokemon}.')
@@ -136,7 +125,7 @@ class Player(Trainer):
                         continue
 
                 elif option == '2':
-                    self.switch_pokemon()
+                    self.pokemon.switch()
                     continue
 
                 elif option == '3':
@@ -232,7 +221,7 @@ class Player(Trainer):
                 adj_square = map.get(new_position)
 
                 if isinstance(adj_square.current_val, Item):
-                    self.pickup_item(adj_square.current_val, map, new_position)
+                    self.items.pickup(adj_square.current_val, map, new_position)
                 
                 elif isinstance(adj_square.current_val, Pokemon):
                     self.__change_square(map, new_position)

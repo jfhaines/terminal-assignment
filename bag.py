@@ -161,11 +161,6 @@ class PokemonCollection():
     @property
     def all(self):
         return self.__collection
-
-    def switch(self, index):
-        pokemon = self.available[index]
-        self.__collection.remove(pokemon)
-        self.__collection.insert(0, pokemon)
     
     @property
     def active(self):
@@ -174,3 +169,16 @@ class PokemonCollection():
     @property
     def count_available(self):
         return len(self.available)
+
+    def switch(self):
+        while True:
+            try:
+                index = get_index(f"Which Pokemon do you want to use? {self.available_str}: ", self.available)
+                break
+            except InputError as err:
+                print(err.user_message)
+                
+        pokemon = self.available[index]
+        self.__collection.remove(pokemon)
+        self.__collection.insert(0, pokemon)
+        print(f"Switched to {self.active.name}.")
