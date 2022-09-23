@@ -39,6 +39,11 @@ class ItemBag:
             except InputError as err:
                 print(err.user_message)
 
+        self.add(item)
+        map.set(item_position, None)
+        print(f'You picked up {item.name}. Item bag: {self}.')
+
+    def add(self, item):
         if isinstance(item, PokeBall):
             self.pokeballs.add(item)
         
@@ -47,9 +52,6 @@ class ItemBag:
         
         elif isinstance(item, MovePotion):
             self.move_potions.add(item)
-
-        map.set(item_position, None)
-        print(f'You picked up {item.name}. Item bag: {self}.')
 
     
     def available(self, is_catchable):

@@ -26,6 +26,7 @@ class Move:
         
         return moves
 
+
     def __init__(self, name, power, pp):
         self.__name = name
         self.__power = power
