@@ -466,8 +466,6 @@ class Player(Trainer):
 
                 if isinstance(adj_square.current_val, Item):
                     self.pickup_item(adj_square.current_val, map, new_position)
-                    map.display()
-                    continue
                 
                 elif isinstance(adj_square.current_val, Pokemon):
                     self.__change_square(map, new_position)
@@ -476,17 +474,15 @@ class Player(Trainer):
                     if rand_num == 1:
                         print(f'A wild {map.get(self.position).former_val} appeared.')
                         self.pokemon_battle(map.get(self.position).former_val, True)
-                        map.display()
-                    continue
+                    else:
+                        continue
                 
                 elif isinstance(adj_square.current_val, NpcTrainer):
                     if self.trainer_battle(adj_square.current_val) == 'Won':
                         map.set(new_position, None)
-                    map.display()
-                    continue
                 
                 elif adj_square.current_val == None:
                     self.__change_square(map, new_position)
-                    map.display()
-                    continue
+
+                map.display()
             
