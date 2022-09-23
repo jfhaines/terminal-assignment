@@ -7,9 +7,9 @@ from utility import get_index
 
 class ItemBag:
     def __init__(self):
-        self.__pokeballs = PokeBallContainer()
-        self.__health_potions = HealthPotionContainer()
-        self.__move_potions = MovePotionContainer()
+        self.__pokeballs = ItemType(PokeBall)
+        self.__health_potions = ItemType(HealthPotion)
+        self.__move_potions = ItemType(MovePotion)
     
     def __repr__(self):
         return f'{self.pokeballs.type.name}: {self.pokeballs.count} remaining, {self.health_potions.type.name}: {self.health_potions.count} remaining, {self.move_potions.type.name}: {self.move_potions.count} remaining'
@@ -36,10 +36,9 @@ class ItemBag:
         elif isinstance(item, MovePotion):
             self.move_potions.add(item)
     
-    @property
-    def available(self):
+    def available(self, is_catchable):
         available = []
-        if not self.pokeballs.is_empty:
+        if not self.pokeballs.is_empty and is_catchable:
             available.append(self.pokeballs)
 
         if not self.health_potions.is_empty:
@@ -49,15 +48,35 @@ class ItemBag:
             available.append(self.move_potions)
         return available
     
-    @property
-    def available_str(self):
-        list_store = list(enumerate(self.available))
+    def available_str(self, is_catchable):
+        list_store = list(enumerate(self.available(is_catchable)))
         for index, item in list_store:
             list_store[index] = f'{index} = {item}'
         return ', '.join(list_store)
+    
+    def use(self, my_pokemon, opponent_pokemon=None):
+        is_catchable = bool(opponent_pokemon)
+        while True:
+            if len(self.available(is_catchable)) == 0:
+                print('No available items')
+                return
+            try:
+                item_index = get_index(f"Which item to use? {self.available_str(is_catchable)}: ", self.available(is_catchable))
+            except InputError as err:
+                print(err.user_message)
+            else:
+                item_type = self.available(is_catchable)[item_index]
+                if item_type.type == PokeBall:
+                    caught = item_type.get.use(opponent_pokemon, self)
+                else:
+                    item_type.get.use(my_pokemon)
+                    caught = False
+                item_type.remove()
+                print(f'Used {item_type.type.name}.')
+                return caught
 
 
-class Container:
+class ItemType:
     def __init__(self, type):
         self.__collection = []
         self.__type = type
@@ -72,10 +91,6 @@ class Container:
     @property
     def type(self):
         return self.__type
-    
-    def use(self, pokemon):
-        self.get.use(pokemon)
-        self.collection.pop()
 
     @property
     def count(self):
@@ -92,28 +107,9 @@ class Container:
     @property
     def is_empty(self):
         return True if self.count == 0 else False
-
-
-
-class PokeBallContainer(Container):
-    def __init__(self):
-        super().__init__(PokeBall)
     
-    def use(self, pokemon, player):
-        caught = self.get.use(pokemon, player)
+    def remove(self):
         self.collection.pop()
-        if caught == True:
-            return True
-        else:
-            return False
-
-class HealthPotionContainer(Container):
-    def __init__(self):
-        super().__init__(HealthPotion)
-
-class MovePotionContainer(Container):
-    def __init__(self):
-        super().__init__(MovePotion)
 
 
 

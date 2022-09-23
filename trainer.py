@@ -127,39 +127,8 @@ class Player(Trainer):
                 print(f"Switched to {self.pokemon.active.name}.")
                 break
 
-    def __use_item(self, my_pokemon, opponent_pokemon = None):
-        is_catchable = bool(opponent_pokemon)
-        while True:
-            if len(self.items.available) == 0:
-                print('No available items')
-                return
-            if not is_catchable and len(self.items.available) == 1 and self.items.available[0].type == PokeBall:
-                print('No available items.')
-                return
-            try:
-                item_index = get_index(f"Which item to use? {self.items.available_str}: ", self.items.available)
-            except InputError as err:
-                print(err.user_message)
-            else:
-                item_type = self.items.available[item_index]
-
-                if item_type.type == PokeBall and not is_catchable:
-                    print("Can't use a Poke Ball on a Trainer's Pokemon.")
-                    continue
-                else:
-                    if item_type.type == PokeBall:
-                        caught = item_type.use(opponent_pokemon, self)
-                    else:
-                        item_type.use(my_pokemon)
-                        caught = False
-                    print(f'Used {item_type.type.name}.')
-                    print(self.items)
-                    return caught
-
-
     def pokemon_battle(self, opponent_pokemon, is_catchable):
-        my_pokemon = self.pokemon.active
-        print(f'Your selected pokemon is {my_pokemon}. You are facing {opponent_pokemon}.')
+        print(f'Your selected pokemon is {self.pokemon.active}. You are facing {opponent_pokemon}.')
         while True:
             my_pokemon = self.pokemon.active
             option = input('What action to take? (0 = Use move, 1 = Use item, 2 = Switch Pokemon, 3 = Exit battle, 4 = Show items, 5 = Show Pokemon: ')
@@ -179,13 +148,13 @@ class Player(Trainer):
 
                 elif option == '1':
                     if is_catchable:
-                        caught = self.__use_item(my_pokemon, opponent_pokemon)
+                        caught = self.items.use(my_pokemon, opponent_pokemon)
                         if caught == True:
                             return 'Exit'
                         else:
                             continue
                     else:
-                        self.__use_item(my_pokemon)
+                        self.items.use(my_pokemon)
                         continue
 
                 elif option == '2':
