@@ -4,9 +4,12 @@ from moves import Move
 from pokemon import Pokemon
 from trainer import NpcTrainer, Player
 from randomizer import RandomList
-from utility import rand_unique_items
+from utility import rand_unique_items, get_item
+from import_json import pokemon_data
 
-print(rand_unique_items(3, ['tackle', 'pound', 'hyperbeam', 'earthquake', 'flame', 'watergun']))
+p = Pokemon.generate()
+print(p.moves)
+print(get_item(f'Which move do you want to use? {p.available_moves_str}', p.available_moves))
 
 
 # map = Map(7, 7)

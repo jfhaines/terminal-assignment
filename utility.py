@@ -16,12 +16,11 @@ def rand_unique_items(num, items):
     selected = []
     for item in item_list:
         dict_list.append(randomizer_assembler(item))
-    for i in range(num):
+    for i in range(min(num, len(items))):
         item = (RandomList(dict_list).get_random())
         selected.append(item)
         dict_list.remove(randomizer_assembler(item))
     return selected[0] if num == 1 else selected
-
 
 
 def get_index(prompt, item_list):
@@ -30,3 +29,17 @@ def get_index(prompt, item_list):
         return int(user_input)
     else:
         raise InputError(user_input)
+
+def convert_list_to_prompt_str(list_items):
+    list_store = list(enumerate(list_items))
+    for index, move in list_store:
+        list_store[index] = f'{index} = {move}'
+    return ', '.join(list_store)
+
+def get_item(prompt, item_list):
+    while True:
+            try:
+                index = get_index(prompt, item_list)
+                return item_list[index]
+            except InputError as err:
+                print(err.user_message)

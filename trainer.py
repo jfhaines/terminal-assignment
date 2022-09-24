@@ -5,7 +5,7 @@ import pypokedex as pokedex
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
 from custom_exceptions import InputError
-from utility import get_index
+from utility import get_index, rand_item
 from bag import ItemBag, PokemonCollection
 
 
@@ -166,7 +166,7 @@ class Player(Trainer):
                         print(f'You have won against {trainer.name}. They have no Pokemon remaining.')
                         return 'Won'
 
-    def __change_square(self, map, new_position):
+    def change_square(self, map, new_position):
         map.set(new_position, self)
         map.set(self.position, None if not isinstance(map.get(self.position).former_val, Pokemon) else Pokemon.generate())
         self.position = new_position
@@ -213,10 +213,9 @@ class Player(Trainer):
                     self.items.pickup(adj_square.current_val, map, new_position)
                 
                 elif isinstance(adj_square.current_val, Pokemon):
-                    self.__change_square(map, new_position)
+                    self.change_square(map, new_position)
                     map.display()
-                    rand_num = randint(1, 3)
-                    if rand_num == 1:
+                    if rand_item([(True, 1), (False, 3)]) == True:
                         print(f'A wild {map.get(self.position).former_val} appeared.')
                         self.pokemon_battle(map.get(self.position).former_val, True)
                     else:
@@ -227,7 +226,7 @@ class Player(Trainer):
                         map.set(new_position, None)
                 
                 elif adj_square.current_val == None:
-                    self.__change_square(map, new_position)
+                    self.change_square(map, new_position)
 
                 map.display()
             

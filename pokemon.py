@@ -4,16 +4,26 @@ from random import randint, uniform
 from moves import Move
 import pokebase as pb
 from custom_exceptions import InputError
-from utility import get_index
-from utility import rand_unique_items
+from utility import rand_unique_items, get_index, convert_list_to_prompt_str, get_item
 
 
 class Pokemon:
     @classmethod
     def generate(cls):
-        pokemon_name = rand_unique_items(1, pokemon_data.keys())
+        pokemon_name = rand_unique_items(1, list(pokemon_data.keys()))
         stats = pokemon_data[pokemon_name]
-        return cls(name = pokemon_name, hp = stats['hp'], attack = stats['attack'], defense = stats['defense'], moves = rand_unique_items(4, pokemon_data[pokemon_name]['moves']))
+
+        available_moves = []
+        for move in pokemon_data[pokemon_name]['moves']:
+            if move in move_data:
+                available_moves.append(move)
+
+        moves = rand_unique_items(4, available_moves)
+        for index, move_name in list(enumerate((moves))):
+            move_stats = move_data[move_name]
+            moves[index] = Move(move_name, move_stats['power'], move_stats['pp'])
+
+        return cls(name = pokemon_name, hp = stats['hp'], attack = stats['attack'], defense = stats['defense'], moves = moves)
     
     def __repr__(self):
         return f"{' '.join(self.name.split('-')).capitalize()} (HP: {self.remaining_hp}/{self.hp}, Attack: {self.attack}, Defense: {self.defense})"
@@ -94,14 +104,9 @@ class Pokemon:
     def use_move(self, opponent_pokemon, attacking_pokemon_is_npc=False):
         if attacking_pokemon_is_npc:
             move_index = randint(0, len(opponent_pokemon.available_moves) - 1)
+            move = self.available_moves[move_index]
         else:
-            while True:
-                try:
-                    move_index = get_index(f"Use which move? {self.available_moves_str}: ", self.available_moves)
-                    break
-                except InputError as err:
-                    print(err.user_message)
-        move = self.available_moves[move_index]
+            move = get_item(f"Use which move? {self.available_moves_str}: ", self.available_moves)
         damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / opponent_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
         opponent_pokemon.remaining_hp = 0 if damage > opponent_pokemon.remaining_hp else opponent_pokemon.remaining_hp - damage
         move.remaining_pp -= 1
@@ -117,7 +122,8 @@ class Pokemon:
     
     @property
     def available_moves_str(self):
-        list_store = list(enumerate(self.available_moves))
-        for index, move in list_store:
-            list_store[index] = f'{index} = {move}'
-        return ', '.join(list_store)
+        return convert_list_to_prompt_str(self.available_moves)
+    
+    @property
+    def all_moves_str(self):
+        return convert_list_to_prompt_str(self.moves)

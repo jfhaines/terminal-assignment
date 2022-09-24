@@ -2,7 +2,7 @@ from pokemon import Pokemon
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
 from custom_exceptions import InputError
-from utility import get_index
+from utility import get_index, convert_list_to_prompt_str, get_item
 
 
 class ItemBag:
@@ -67,31 +67,22 @@ class ItemBag:
         return available
     
     def available_str(self, is_catchable):
-        list_store = list(enumerate(self.available(is_catchable)))
-        for index, item in list_store:
-            list_store[index] = f'{index} = {item}'
-        return ', '.join(list_store)
+        return convert_list_to_prompt_str(self.available(is_catchable))
     
     def use(self, my_pokemon, opponent_pokemon=None):
         is_catchable = bool(opponent_pokemon)
-        while True:
-            if len(self.available(is_catchable)) == 0:
-                print('No available items')
-                return
-            try:
-                item_index = get_index(f"Which item to use? {self.available_str(is_catchable)}: ", self.available(is_catchable))
-            except InputError as err:
-                print(err.user_message)
-            else:
-                item_type = self.available(is_catchable)[item_index]
-                if item_type.type == PokeBall:
-                    caught = item_type.get.use(opponent_pokemon, self)
-                else:
-                    item_type.get.use(my_pokemon)
-                    caught = False
-                item_type.remove()
-                print(f'Used {item_type.type.name}.')
-                return caught
+        if len(self.available(is_catchable)) == 0:
+            print('No available items')
+            return
+        item_type = get_item(f"Which item to use? {self.available_str(is_catchable)}: ", self.available(is_catchable))
+        if item_type.type == PokeBall:
+            caught = item_type.get.use(opponent_pokemon, self)
+        else:
+            item_type.get.use(my_pokemon)
+            caught = False
+        item_type.remove()
+        print(f'Used {item_type.type.name}.')
+        return caught
 
 
 class ItemType:
@@ -155,10 +146,8 @@ class PokemonCollection():
     
     @property
     def available_str(self):
-        list_store = list(enumerate(self.available))
-        for index, pokemon in list_store:
-            list_store[index] = f"{index} = {pokemon}"
-        return ', '.join(list_store)
+        return convert_list_to_prompt_str(self.available)
+        
 
     @property
     def all(self):
@@ -173,14 +162,7 @@ class PokemonCollection():
         return len(self.available)
 
     def switch(self):
-        while True:
-            try:
-                index = get_index(f"Which Pokemon do you want to use? {self.available_str}: ", self.available)
-                break
-            except InputError as err:
-                print(err.user_message)
-                
-        pokemon = self.available[index]
+        pokemon = get_item(f"Which Pokemon do you want to use? {self.available_str}: ", self.available)
         self.__collection.remove(pokemon)
         self.__collection.insert(0, pokemon)
         print(f"Switched to {self.active.name}.")

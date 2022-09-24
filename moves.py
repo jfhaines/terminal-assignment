@@ -48,5 +48,3 @@ class Move:
     @remaining_pp.setter
     def remaining_pp(self, remaining_pp):
         self.__remaining_pp = remaining_pp
-
-
