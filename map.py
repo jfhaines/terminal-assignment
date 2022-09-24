@@ -2,19 +2,12 @@ from random import randint
 from pokemon import Pokemon
 from item import Item
 from trainer import NpcTrainer, Player
+from utility import rand_item
 
 class Square:
     @classmethod
     def generate(cls):
-        num = randint(1, 30)
-        if num <= 15:
-            return cls(None, None)
-        elif num <= 21:
-            return cls(Pokemon.generate(), None)
-        elif num <= 28:
-            return cls(Item.generate(), None)
-        elif num <= 30:
-            return cls(NpcTrainer.generate(), None)
+        return rand_item([(None, 15), (Pokemon.generate(), 6), (Item.generate(), 8), (NpcTrainer(), None)])
 
     def __init__(self, current_val, former_val):
         self.__current_val = current_val

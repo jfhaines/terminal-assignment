@@ -4,6 +4,9 @@ from moves import Move
 from pokemon import Pokemon
 from trainer import NpcTrainer, Player
 from randomizer import RandomList
+from utility import rand_unique_items
+
+print(rand_unique_items(3, ['tackle', 'pound', 'hyperbeam', 'earthquake', 'flame', 'watergun']))
 
 
 # map = Map(7, 7)

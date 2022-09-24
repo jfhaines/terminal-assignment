@@ -9,7 +9,7 @@ class Move:
         available_moves = []
         for move in pokemon_data[pokemon_name]['moves']:
             if move in move_data:
-                available_moves.append(move)
+                available_moves.append((move, 1))
         
         indexes = []
         while len(indexes) < min(num, len(available_moves)):
