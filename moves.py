@@ -4,29 +4,6 @@ from random import randint
 
 
 class Move:
-    @classmethod
-    def generate(cls, num, pokemon_name):
-        available_moves = []
-        for move in pokemon_data[pokemon_name]['moves']:
-            if move in move_data:
-                available_moves.append((move, 1))
-        
-        indexes = []
-        while len(indexes) < min(num, len(available_moves)):
-            rand_num = randint(0, min(num, len(available_moves) - 1))
-            if rand_num not in indexes:
-                indexes.append(rand_num)
-        
-        moves = []
-        for index in indexes:
-            move_name = available_moves[index]
-            move_power = move_data[move_name]['power']
-            move_pp = move_data[move_name]['pp']
-            moves.append(cls(move_name, move_power, move_pp))
-        
-        return moves
-
-
     def __init__(self, name, power, pp):
         self.__name = name
         self.__power = power

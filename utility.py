@@ -20,7 +20,7 @@ def rand_unique_items(num, items):
         item = (RandomList(dict_list).get_random())
         selected.append(item)
         dict_list.remove(randomizer_assembler(item))
-    return selected
+    return selected[0] if num == 1 else selected
 
 
 

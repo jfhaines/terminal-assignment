@@ -5,22 +5,18 @@ from moves import Move
 import pokebase as pb
 from custom_exceptions import InputError
 from utility import get_index
+from utility import rand_unique_items
 
 
 class Pokemon:
     @classmethod
-    def __get_random_pokemon_name(cls):
-        rand_num = randint(0, len(pokemon_data.keys()) - 1)
-        return list(pokemon_data.keys())[rand_num]
+    def generate(cls):
+        pokemon_name = rand_unique_items(1, pokemon_data.keys())
+        stats = pokemon_data[pokemon_name]
+        return cls(name = pokemon_name, hp = stats['hp'], attack = stats['attack'], defense = stats['defense'], moves = rand_unique_items(4, pokemon_data[pokemon_name]['moves']))
     
     def __repr__(self):
         return f"{' '.join(self.name.split('-')).capitalize()} (HP: {self.remaining_hp}/{self.hp}, Attack: {self.attack}, Defense: {self.defense})"
-
-    @classmethod
-    def generate(cls):
-        pokemon_name = cls.__get_random_pokemon_name()
-        stats = pokemon_data[pokemon_name]
-        return cls(name = pokemon_name, hp = stats['hp'], attack = stats['attack'], defense = stats['defense'], moves = Move.generate(4, pokemon_name))
 
     def __init__(self, name, hp, attack, defense, moves):
         self.__name = name
