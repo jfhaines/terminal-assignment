@@ -4,7 +4,7 @@ import names
 import pypokedex as pokedex
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
-from custom_exceptions import InputError
+from custom_exceptions import InputError, NoneAvailableError
 from utility import get_index, rand_item, should_continue
 from bag import ItemBag, PokemonCollection
 
@@ -85,6 +85,8 @@ class Player(Trainer):
     def pokemon_battle(self, opponent_pokemon, is_catchable):
         print(f'Your selected pokemon is {self.pokemon.active}. You are facing {opponent_pokemon}.')
         while True:
+            if self.pokemon.count_available == 0:
+                raise NoneAvailableError()
             my_pokemon = self.pokemon.active
             option = input('What action to take? (0 = Use move, 1 = Use item, 2 = Switch Pokemon, 3 = Exit battle, 4 = Show items, 5 = Show Pokemon: ')
             try:
@@ -92,13 +94,13 @@ class Player(Trainer):
                     my_pokemon.use_move(opponent_pokemon)
 
                     if opponent_pokemon.remaining_hp == 0:
-                        print(f'{my_pokemon.name} beat {opponent_pokemon.name}.')
+                        print(f'{my_pokemon.name_str} beat {opponent_pokemon.name_str}.')
                         return 'Won'
             
                     opponent_pokemon.use_move(my_pokemon, True)
 
                     if my_pokemon.remaining_hp == 0:
-                        print(f'{opponent_pokemon.name} beat {my_pokemon.name}.')
+                        print(f'{opponent_pokemon.name_str} beat {my_pokemon.name_str}.')
                         return 'Lost'
 
                 elif option == '1':
@@ -132,14 +134,17 @@ class Player(Trainer):
 
             except InputError as err:
                 print(err.user_message)
+            except NoneAvailableError:
+                print("You don't have any Pokemon available.")
+            except AttributeError:
+                print("Not available on this object.")
 
 
     def trainer_battle(self, trainer):
         if should_continue(f'Would you like to battle Pokemon Trainer {trainer.name}?') is False:
             return
-        elif self.pokemon.count_available == 0 or trainer.pokemon.count_available == 0:
-            print(f"{'You do not' if self.pokemon.count_available == 0 else ('Pokemon Trainer ' + trainer.name + 'does not')} have any available Pokemon. You can't battle.")
-            return
+        if self.pokemon.count_available == 0 or trainer.pokemon.count_available == 0:
+            raise NoneAvailableError(f"{'You do not' if self.pokemon.count_available == 0 else ('Pokemon Trainer ' + trainer.name + 'does not')} have any available Pokemon. You can't battle.")
         while True:
             result = self.pokemon_battle(trainer.pokemon.active, False)
             if result == 'Exit':
@@ -193,27 +198,39 @@ class Player(Trainer):
             except InputError as err:
                 print(err.user_message)
                 map.display()
+            except IndexError:
+                print("Could not get new position.")
+                map.display()
             else:
-                adj_square = map.get(new_position)
+                try:
+                    adj_square = map.get(new_position)
 
-                if isinstance(adj_square.current_val, Item):
-                    self.items.pickup(adj_square.current_val, map, new_position)
+                    if isinstance(adj_square.current_val, Item):
+                        self.items.pickup(adj_square.current_val, map, new_position)
+                    
+                    elif isinstance(adj_square.current_val, Pokemon):
+                        self.change_square(map, new_position)
+                        map.display()
+                        if rand_item([(True, 1), (False, 3)]) == True:
+                            print(f'A wild {map.get(self.position).former_val} appeared.')
+                            self.pokemon_battle(map.get(self.position).former_val, True)
+                        else:
+                            continue
+                    
+                    elif isinstance(adj_square.current_val, NpcTrainer):
+                        if self.trainer_battle(adj_square.current_val) == 'Won':
+                            map.set(new_position, None)
+                    
+                    elif adj_square.current_val == None:
+                        self.change_square(map, new_position)
                 
-                elif isinstance(adj_square.current_val, Pokemon):
-                    self.change_square(map, new_position)
-                    map.display()
-                    if rand_item([(True, 1), (False, 3)]) == True:
-                        print(f'A wild {map.get(self.position).former_val} appeared.')
-                        self.pokemon_battle(map.get(self.position).former_val, True)
-                    else:
-                        continue
-                
-                elif isinstance(adj_square.current_val, NpcTrainer):
-                    if self.trainer_battle(adj_square.current_val) == 'Won':
-                        map.set(new_position, None)
-                
-                elif adj_square.current_val == None:
-                    self.change_square(map, new_position)
+                except IndexError as err:
+                    print(err)
+                except TypeError as err:
+                    print(err)
+                except NoneAvailableError as err:
+                    print(err)
+                except AttributeError as err:
+                    print(err)
 
                 map.display()
-            

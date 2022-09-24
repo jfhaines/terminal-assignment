@@ -1,7 +1,7 @@
 from pokemon import Pokemon
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
-from custom_exceptions import InputError
+from custom_exceptions import InputError, NoneAvailableError
 from utility import get_index, convert_list_to_prompt_str, get_item, should_continue
 
 
@@ -29,7 +29,10 @@ class ItemBag:
     def pickup(self, item, map, item_position):
         if should_continue(f'Do you want to pickup {item.name}?') is False:
             return
-        self.add(item)
+        try:
+            self.add(item)
+        except TypeError:
+            raise
         map.set(item_position, None)
         print(f'You picked up {item.name}. Item bag: {self}.')
 
@@ -42,6 +45,9 @@ class ItemBag:
         
         elif isinstance(item, MovePotion):
             self.move_potions.add(item)
+
+        else:
+            raise TypeError('Item being added is wrong type.')
 
     
     def available(self, is_catchable):
@@ -65,11 +71,17 @@ class ItemBag:
             print('No available items')
             return
         item_type = get_item(f"Which item to use? {self.available_str(is_catchable)}: ", self.available(is_catchable))
-        if item_type.type == PokeBall:
-            caught = item_type.get.use(opponent_pokemon, self)
-        else:
-            item_type.get.use(my_pokemon)
-            caught = False
+        try:
+            if item_type.type == PokeBall:
+                caught = item_type.get.use(opponent_pokemon, self)
+            elif item_type.type == HealthPotion or item_type.type == MovePotion:
+                item_type.get.use(my_pokemon)
+                caught = False
+            else: 
+                raise TypeError('Could not use item, item type selected is not supported.')
+        except TypeError as err:
+            print(err)
+            return
         item_type.remove()
         print(f'Used {item_type.type.name}.')
         return caught
@@ -96,19 +108,30 @@ class ItemType:
         return len(self.collection)
     
     def add(self, item):
-        if isinstance(item, self.type):
-            self.collection.append(item)
+        try:
+            if isinstance(item, self.type):
+                self.collection.append(item)
+            else:
+                raise TypeError('Item being added to collection is the incorrect type')
+        except TypeError as err:
+            print(err)
     
     @property
     def get(self):
-        return self.collection[0] if not self.is_empty else None
+        try:
+            self.collection[0]
+        except IndexError:
+            print('Collection is empty, cannot retrieve item.')
     
     @property
     def is_empty(self):
         return True if self.count == 0 else False
     
     def remove(self):
-        self.collection.pop()
+        try:
+            self.collection.pop()
+        except IndexError:
+            print('Cannot remove item, collection is empty.')
 
 
 
@@ -124,7 +147,13 @@ class PokemonCollection():
         return f"{', '.join(pokemon_list)}"
     
     def add(self, pokemon):
-        self.__collection.append(pokemon)
+        try:
+            if isinstance(pokemon, Pokemon):
+                self.__collection.append(pokemon)
+            else:
+                raise TypeError('Object being added is not a Pokemon.')
+        except TypeError as err:
+            print(err)
     
     @property
     def available(self):
@@ -145,13 +174,24 @@ class PokemonCollection():
     
     @property
     def active(self):
-        return self.available[0]
+        try:
+            pokemon = self.available[0]
+            return pokemon
+        except IndexError:
+            print('Pokemon collection is empty.')
+            return None
     
     @property
     def count_available(self):
         return len(self.available)
 
     def switch(self):
+        try:
+            if self.count_available <= 1:
+                raise NoneAvailableError()
+        except NoneAvailableError: 
+            print("You don't have another Pokemon to switch to.")
+
         pokemon = get_item(f"Which Pokemon do you want to use? {self.available_str}: ", self.available)
         self.__collection.remove(pokemon)
         self.__collection.insert(0, pokemon)

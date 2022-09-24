@@ -3,30 +3,40 @@ from import_json import pokemon_data, move_data
 from random import randint, uniform
 from moves import Move
 import pokebase as pb
-from custom_exceptions import InputError
+from custom_exceptions import InputError, NoneAvailableError
 from utility import rand_unique_items, get_index, convert_list_to_prompt_str, get_item
 
 
 class Pokemon:
     @classmethod
     def generate(cls):
-        pokemon_name = rand_unique_items(1, list(pokemon_data.keys()))
-        stats = pokemon_data[pokemon_name]
+        try:
+            pokemon_name = rand_unique_items(1, list(pokemon_data.keys()))
+            stats = pokemon_data[pokemon_name]
 
-        available_moves = []
-        for move in pokemon_data[pokemon_name]['moves']:
-            if move in move_data:
-                available_moves.append(move)
+        except KeyError:
+            print('Unable to load Pokemon.')
+            return
 
-        moves = rand_unique_items(4, available_moves)
-        for index, move_name in list(enumerate((moves))):
-            move_stats = move_data[move_name]
-            moves[index] = Move(move_name, move_stats['power'], move_stats['pp'])
+        try:
+            available_moves = []
+            for move in pokemon_data[pokemon_name]['moves']:
+                if move in move_data:
+                    available_moves.append(move)
+
+            moves = rand_unique_items(4, available_moves)
+            for index, move_name in list(enumerate((moves))):
+                move_stats = move_data[move_name]
+                moves[index] = Move(move_name, move_stats['power'], move_stats['pp'])
+        
+        except KeyError:
+            print('Unable to load move data.')
+            return
 
         return cls(name = pokemon_name, hp = stats['hp'], attack = stats['attack'], defense = stats['defense'], moves = moves)
     
     def __repr__(self):
-        return f"{' '.join(self.name.split('-')).capitalize()} (HP: {self.remaining_hp}/{self.hp}, Attack: {self.attack}, Defense: {self.defense})"
+        return f"{self.name_str} (HP: {self.remaining_hp}/{self.hp}, Attack: {self.attack}, Defense: {self.defense})"
 
     def __init__(self, name, hp, attack, defense, moves):
         self.__name = name
@@ -102,14 +112,22 @@ class Pokemon:
     
     
     def use_move(self, opponent_pokemon, attacking_pokemon_is_npc=False):
-        if attacking_pokemon_is_npc:
-            move = rand_unique_items(1, opponent_pokemon.available_moves)
-        else:
-            move = get_item(f"Use which move? {self.available_moves_str}: ", self.available_moves)
-        damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / opponent_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
-        opponent_pokemon.remaining_hp = 0 if damage > opponent_pokemon.remaining_hp else opponent_pokemon.remaining_hp - damage
-        move.remaining_pp -= 1
-        print (f"{self.name} used {move.name} dealing {damage} damage. {opponent_pokemon.name} has {opponent_pokemon.remaining_hp}/{opponent_pokemon.hp} hp remaining.")
+        try:
+            if self.available_moves == 0:
+                raise NoneAvailableError()
+            if attacking_pokemon_is_npc:
+                move = rand_unique_items(1, self.available_moves)
+            else:
+                move = get_item(f"Use which move? {self.available_moves_str}: ", self.available_moves)
+            damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / opponent_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))
+            opponent_pokemon.remaining_hp = 0 if damage > opponent_pokemon.remaining_hp else opponent_pokemon.remaining_hp - damage
+            move.remaining_pp -= 1
+            print (f"{self.name_str} used {move.name} dealing {damage} damage. {opponent_pokemon.name_str} has {opponent_pokemon.remaining_hp}/{opponent_pokemon.hp} hp remaining.")
+        except AttributeError:
+            print("Only a pokemon can use moves.")
+        except NoneAvailableError:
+            print(f"{self.name_str} has no moves available.")
+
 
     @property
     def available_moves(self):
@@ -121,8 +139,24 @@ class Pokemon:
     
     @property
     def available_moves_str(self):
-        return convert_list_to_prompt_str(self.available_moves)
+        try:
+            if len(self.available_moves) > 0:
+                return convert_list_to_prompt_str(self.available_moves)
+            else:
+                raise NoneAvailableError()
+        except NoneAvailableError:
+            print(f"{self.name_str} has no moves available.")
     
     @property
     def all_moves_str(self):
-        return convert_list_to_prompt_str(self.moves)
+        try:
+            if len(self.moves) > 0:
+                return convert_list_to_prompt_str(self.moves)
+            else:
+                raise NoneAvailableError()
+        except NoneAvailableError:
+            print(f"{self.name_str} has no moves.")
+
+    @property
+    def name_str(self):
+        return ' '.join(self.name.split('-')).capitalize()

@@ -1,6 +1,6 @@
 from random import randint, random
 from pokemon import Pokemon
-from utility import rand_item
+from utility import rand_item, get_item
 
 class Item:
     @classmethod
@@ -73,7 +73,10 @@ class HealthPotion(Item):
         self.__amount = amount
 
     def use(self, pokemon):
-        pokemon.remaining_hp = pokemon.remaining_hp + self.amount if (pokemon.remaining_hp + self.amount) <= pokemon.hp else pokemon.hp
+        try:
+            pokemon.remaining_hp = pokemon.remaining_hp + self.amount if (pokemon.remaining_hp + self.amount) <= pokemon.hp else pokemon.hp
+        except AttributeError:
+            print('Cannot use item on a non-pokemon object.')
 
 
 
@@ -98,6 +101,8 @@ class MovePotion(Item):
 
     
     def use(self, pokemon):
-        move_index = int(input(f"Use which move? {pokemon.available_moves_str}"))
-        move = pokemon.available_moves[move_index]
-        move.remaining_pp = (move.remaining_pp + self.amount) if (move.remaining_pp + self.amount) <= move.pp else move.pp
+        try:
+            move = get_item(f"Use which move? {pokemon.available_moves_str}", pokemon.available_moves)
+            move.remaining_pp = (move.remaining_pp + self.amount) if (move.remaining_pp + self.amount) <= move.pp else move.pp
+        except AttributeError:
+            print('Cannot use item on a non-pokemon object.')

@@ -49,27 +49,36 @@ class Map:
                 row.append(Square.generate())
     
     def get(self, coordinates):
-        row_num, col_num = coordinates
-        return self.grid[row_num][col_num]
+        try:
+            row_num, col_num = coordinates
+            return self.grid[row_num][col_num]
+        except IndexError:
+            raise IndexError('Coordinates not valid.')
     
     def set(self, coordinates, value):
-        row_num, col_num = coordinates
-        square = self.grid[row_num][col_num]
+        try:
+            row_num, col_num = coordinates
+            square = self.grid[row_num][col_num]
+        except IndexError:
+            raise IndexError('Coordinates are not valid.')
         square.former_val = self.grid[row_num][col_num].current_val
         square.current_val = value
         
 
     def display(self):
-        for col in self.grid[0]:
-            print('----', end='')
-        print('---\n')
-        for row in self.grid:
-            for square in row:
-                print(square, end='    ')
-            print('\n')
-        for col in self.grid[0]:
-            print('----', end='')
-        print('---\n')
+        try:
+            for col in self.grid[0]:
+                print('----', end='')
+            print('---\n')
+            for row in self.grid:
+                for square in row:
+                    print(square, end='    ')
+                print('\n')
+            for col in self.grid[0]:
+                print('----', end='')
+            print('---\n')
+        except IndexError:
+            print('Map is empty.')
     
     def clear_square(self, coordinates):
         self.set(coordinates, None)

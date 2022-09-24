@@ -4,14 +4,16 @@ from moves import Move
 from pokemon import Pokemon
 from trainer import NpcTrainer, Player
 from randomizer import RandomList
-from utility import rand_unique_items, get_item
+from utility import rand_unique_items, get_item, convert_list_to_prompt_str
 from import_json import pokemon_data
+from bag import ItemBag
 
+i = ItemBag()
+m = Map(5, 5)
+p = [1, 1]
 
-p1 = Pokemon.generate()
-p2 = Pokemon.generate()
+print(convert_list_to_prompt_str([]))
 
-p1.use_move(p2)
 
 # map = Map(7, 7)
 # me = Player()
