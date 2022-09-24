@@ -5,7 +5,7 @@ import pypokedex as pokedex
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
 from custom_exceptions import InputError
-from utility import get_index, rand_item
+from utility import get_index, rand_item, should_continue
 from bag import ItemBag, PokemonCollection
 
 
@@ -135,36 +135,23 @@ class Player(Trainer):
 
 
     def trainer_battle(self, trainer):
+        if should_continue(f'Would you like to battle Pokemon Trainer {trainer.name}?') is False:
+            return
+        elif self.pokemon.count_available == 0 or trainer.pokemon.count_available == 0:
+            print(f"{'You do not' if self.pokemon.count_available == 0 else ('Pokemon Trainer ' + trainer.name + 'does not')} have any available Pokemon. You can't battle.")
+            return
         while True:
-            try:
-                user_input = input(f'Would you like to battle Pokemon Trainer {trainer.name}? (y | n): ')
-                if user_input == 'n':
-                    return
-                elif user_input == 'y':
-                    pass
-                else:
-                    raise InputError(user_input)
-            except InputError as err:
-                print(err.user_message)
-            else:
-                if self.pokemon.count_available == 0:
-                    print("You don't have any available Pokemon. You can't battle.")
-                    return
-                elif trainer.pokemon.count_available == 0:
-                    print(f"Pokemon Trainer {trainer.name} has no available Pokemon. You can't battle.")
-                    return
-                while True:
-                    result = self.pokemon_battle(trainer.pokemon.active, False)
-                    if result == 'Exit':
-                        return 'Exit'
+            result = self.pokemon_battle(trainer.pokemon.active, False)
+            if result == 'Exit':
+                return 'Exit'
 
-                    if self.pokemon.count_available == 0:
-                        print(f'You have been defeated by {trainer.name}. You have no available Pokemon left.')
-                        return 'Lost'
-                    
-                    if trainer.pokemon.count_available == 0:
-                        print(f'You have won against {trainer.name}. They have no Pokemon remaining.')
-                        return 'Won'
+            if self.pokemon.count_available == 0:
+                print(f'You have been defeated by {trainer.name}. You have no available Pokemon left.')
+                return 'Lost'
+            
+            if trainer.pokemon.count_available == 0:
+                print(f'You have won against {trainer.name}. They have no Pokemon remaining.')
+                return 'Won'
 
     def change_square(self, map, new_position):
         map.set(new_position, self)

@@ -7,7 +7,7 @@ from utility import rand_item
 class Square:
     @classmethod
     def generate(cls):
-        return rand_item([(None, 15), (Pokemon.generate(), 6), (Item.generate(), 8), (NpcTrainer(), None)])
+        return cls(rand_item([(None, 15), (Pokemon.generate(), 6), (Item.generate(), 8), (NpcTrainer(), 2)]), None)
 
     def __init__(self, current_val, former_val):
         self.__current_val = current_val

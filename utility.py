@@ -11,15 +11,14 @@ def rand_item(items):
     return RandomList(list_store).get_random()
 
 def rand_unique_items(num, items):
-    item_list = items.copy()
     dict_list = []
     selected = []
-    for item in item_list:
+    for item in items:
         dict_list.append(randomizer_assembler(item))
-    for i in range(min(num, len(items))):
-        item = (RandomList(dict_list).get_random())
-        selected.append(item)
-        dict_list.remove(randomizer_assembler(item))
+    while len(selected) < min(num, len(items)):
+        item = RandomList(dict_list).get_random()
+        if item not in selected:
+            selected.append(item)
     return selected[0] if num == 1 else selected
 
 
@@ -43,3 +42,16 @@ def get_item(prompt, item_list):
                 return item_list[index]
             except InputError as err:
                 print(err.user_message)
+
+def should_continue(prompt):
+    while True:
+        try:
+            user_input = input(f'{prompt} (y | n): ')
+            if user_input == 'n':
+                return False
+            elif user_input == 'y':
+                return True
+            else:
+                raise InputError(user_input)
+        except InputError as err:
+            print(err.user_message)

@@ -7,13 +7,14 @@ from randomizer import RandomList
 from utility import rand_unique_items, get_item
 from import_json import pokemon_data
 
-p = Pokemon.generate()
-print(p.moves)
-print(get_item(f'Which move do you want to use? {p.available_moves_str}', p.available_moves))
 
+p1 = Pokemon.generate()
+p2 = Pokemon.generate()
+
+p1.use_move(p2)
 
 # map = Map(7, 7)
-# me = Player.generate()
+# me = Player()
 # map.set([0, 0], me)
 
 # me.move(map)

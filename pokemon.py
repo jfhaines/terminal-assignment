@@ -103,8 +103,7 @@ class Pokemon:
     
     def use_move(self, opponent_pokemon, attacking_pokemon_is_npc=False):
         if attacking_pokemon_is_npc:
-            move_index = randint(0, len(opponent_pokemon.available_moves) - 1)
-            move = self.available_moves[move_index]
+            move = rand_unique_items(1, opponent_pokemon.available_moves)
         else:
             move = get_item(f"Use which move? {self.available_moves_str}: ", self.available_moves)
         damage = int((((((((2 * 20/5 + 2) * self.attack * move.power) / opponent_pokemon.defense) / 50) + 2) * randint(217, 255)) / 255))

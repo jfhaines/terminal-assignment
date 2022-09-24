@@ -2,7 +2,7 @@ from pokemon import Pokemon
 import pokebase as pb
 from item import PokeBall, HealthPotion, MovePotion, Item
 from custom_exceptions import InputError
-from utility import get_index, convert_list_to_prompt_str, get_item
+from utility import get_index, convert_list_to_prompt_str, get_item, should_continue
 
 
 class ItemBag:
@@ -27,18 +27,8 @@ class ItemBag:
         return self.__move_potions
     
     def pickup(self, item, map, item_position):
-        while True:
-            try:
-                user_input = input('Do you want to pickup {item.name}? (y | n) ')
-                if user_input == 'n':
-                    return
-                elif user_input == 'y':
-                    break
-                else:
-                    raise InputError(user_input)
-            except InputError as err:
-                print(err.user_message)
-
+        if should_continue(f'Do you want to pickup {item.name}?') is False:
+            return
         self.add(item)
         map.set(item_position, None)
         print(f'You picked up {item.name}. Item bag: {self}.')
