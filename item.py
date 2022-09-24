@@ -1,16 +1,11 @@
 from random import randint, random
 from pokemon import Pokemon
+from utility import rand_item
 
 class Item:
     @classmethod
     def generate(cls):
-        rand_num = randint(1, 20)
-        if rand_num <= 9:
-            return PokeBall()
-        elif rand_num <= 17:
-            return HealthPotion()
-        else:
-            return MovePotion()
+        return rand_item([(PokeBall(), 9), (HealthPotion(), 8), (MovePotion(), 3)])
     
     def __init__(self):
         self.__display_str = '?'

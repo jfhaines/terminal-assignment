@@ -10,9 +10,9 @@ from bag import ItemBag, PokemonCollection
 
 
 class Trainer:
-    def __init__(self, name, pokemon):
+    def __init__(self, name):
         self.__name = name
-        self.__pokemon = pokemon
+        self.__pokemon = PokemonCollection()
         self.__display_str = '!'
     
     def __repr__(self):
@@ -48,30 +48,18 @@ class Trainer:
 
 
 class NpcTrainer(Trainer):
-    @classmethod
-    def __generate_random_pokemon_list(cls, num):
-        pokemon_list = PokemonCollection()
-        for i in range(num):
-            pokemon_list.add(Pokemon.generate())
-        return pokemon_list
-
-    @classmethod
-    def generate(cls):
-        return cls(names.get_first_name(), cls.__generate_random_pokemon_list(randint(1, 3)))
-
-
+    def __init__(self):
+        super().__init__(names.get_first_name())
+        for i in range(randint(1, 3)):
+            self.pokemon.add(Pokemon.generate())
 
 
 
 class Player(Trainer):
-    @classmethod
-    def generate(cls):
-        return cls('Joe', [0, 0], PokemonCollection(), ItemBag())
-
-    def __init__(self, name, position, pokemon, items):
-        super().__init__(name, pokemon)
-        self.__items = items
-        self.__position = position
+    def __init__(self):
+        super().__init__(input('What is your name?'))
+        self.__items = ItemBag()
+        self.__position = [0, 0]
         self.display_str = '@'
         self.pokemon.add(Pokemon.generate())
     
@@ -185,6 +173,7 @@ class Player(Trainer):
 
 
     def move(self, map):
+        map.display()
         while True:
             try:
                 action = input('What do you want to do? (a = Move Left, d = Move Right, w = Move Up, s = Move Down, i = Show Items, p = Show Pokemon: ')

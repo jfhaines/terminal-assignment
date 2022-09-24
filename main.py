@@ -3,14 +3,17 @@ from map import Map, Square
 from moves import Move
 from pokemon import Pokemon
 from trainer import NpcTrainer, Player
+from randomizer import RandomList
 
 
-map = Map(7, 7)
-me = Player.generate()
-map.set([0, 0], me)
-map.display()
+# map = Map(7, 7)
+# me = Player.generate()
+# map.set([0, 0], me)
 
-me.move(map)
+# me.move(map)
+
+
+
 
 # p1 = Pokemon.generate()
 # p2 = Pokemon.generate()
