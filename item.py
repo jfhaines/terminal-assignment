@@ -85,8 +85,8 @@ class HealthPotion(Item):
         self.__amount = 40
     
     def __repr__(self):
-        return f'{self.name} (restores {self.__amount} hp for \
-            selected pokemon)'
+        return f'{self.name} (restores {self.__amount} hp for ' \
+               'selected pokemon)'
     
     # amount
     @property

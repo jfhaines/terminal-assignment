@@ -99,30 +99,30 @@ class Player(Trainer):
         Returns:
             None or String: An 'exit' string value or None.
         """
-        print(f'Your selected pokemon is {self.pokemon.active}. \
-              You are facing {opponent_pokemon}.')
+        print(f'Your selected pokemon is {self.pokemon.active}. ' \
+              f'You are facing {opponent_pokemon}.')
         while True:
             if self.pokemon.count_available == 0:
                 raise NoPokemonError("You don't have any Pokemon available.")
             my_pokemon = self.pokemon.active
             option = input(
-                    'What action to take? (0 = Use move, 1 = Use item, \
-                     2 = Switch Pokemon, 3 = Exit battle, \
-                     4 = Show items, 5 = Show Pokemon: ')
+                    'What action to take? (0 = Use move, 1 = Use item, ' \
+                    '2 = Switch Pokemon, 3 = Exit battle, ' \
+                    '4 = Show items, 5 = Show Pokemon: ')
             try:
                 if option == '0':
                     my_pokemon.use_move(opponent_pokemon)
 
                     if opponent_pokemon.remaining_hp == 0:
-                        print(f'{my_pokemon.name_str} beat \
-                              {opponent_pokemon.name_str}.')
+                        print(f'{my_pokemon.name_str} beat ' \
+                              f'{opponent_pokemon.name_str}.')
                         return None
             
                     opponent_pokemon.use_move(my_pokemon, True)
 
                     if my_pokemon.remaining_hp == 0:
-                        print(f'{opponent_pokemon.name_str} \
-                              beat {my_pokemon.name_str}.')
+                        print(f'{opponent_pokemon.name_str} ' \
+                              f'beat {my_pokemon.name_str}.')
                         continue
 
                 elif option == '1':
@@ -177,27 +177,27 @@ class Player(Trainer):
             of the battle
         """
         if should_continue(
-                f'Would you like to battle Pokemon Trainer \
-                {trainer.name}?') is False:
+                f'Would you like to battle Pokemon Trainer '\
+                f'{trainer.name}?') is False:
             return
         if (self.pokemon.count_available == 0 
             or trainer.pokemon.count_available == 0):
             raise NoPokemonError(
-                    f"{'You do not' if self.pokemon.count_available == 0 else ('Pokemon Trainer ' + trainer.name + 'does not')} \
-                    have any available Pokemon. You can't battle.")
+                    f"{'You do not' if self.pokemon.count_available == 0 else ('Pokemon Trainer ' + trainer.name + 'does not')} " \
+                    f"have any available Pokemon. You can't battle.")
         while True:
             result = self.pokemon_battle(trainer.pokemon.active, False)
             if result == 'Exit':
                 return 'Exit'
 
             if self.pokemon.count_available == 0:
-                print(f'You have been defeated by {trainer.name}. \
-                      You have no available Pokemon left.')
+                print(f'You have been defeated by {trainer.name}. ' \
+                      f'You have no available Pokemon left.')
                 return 'Lost'
             
             if trainer.pokemon.count_available == 0:
-                print(f"You have won against {trainer.name}. \
-                      They have no Pokemon remaining.")
+                print(f"You have won against {trainer.name}. " \
+                      f"They have no Pokemon remaining.")
                 return 'Won'
 
     def change_square(self, map, new_position):
@@ -226,9 +226,9 @@ class Player(Trainer):
         while True:
             try:
                 action = input(
-                        'What do you want to do? (a = Move Left, \
-                         d = Move Right, w = Move Up, s = Move Down, \
-                         i = Show Items, p = Show Pokemon, q = Quit: ')
+                        'What do you want to do? (a = Move Left, ' \
+                        'd = Move Right, w = Move Up, s = Move Down, ' \
+                        'i = Show Items, p = Show Pokemon, q = Quit: ')
 
                 if action == 'i':
                     print(self.items)
@@ -276,8 +276,8 @@ class Player(Trainer):
                         self.change_square(map, new_position)
                         map.display()
                         if rand_item([(True, 1), (False, 2)]) == True:
-                            print(f'A wild {map.get(self.position).former_val} \
-                                  appeared.')
+                            print(f'A wild {map.get(self.position).former_val} ' \
+                                  f'appeared.')
                             self.pokemon_battle(
                                     map.get(self.position).former_val, True)
                         else:

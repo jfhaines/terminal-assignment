@@ -128,8 +128,8 @@ class ItemBag:
         """
         is_catchable = bool(opponent_pokemon)
         item_type = get_item(
-                f"Which item to use? \
-                {self.available_str(is_catchable)}: ",
+                f"Which item to use? " \
+                f"{self.available_str(is_catchable)}: ",
                 self.available(is_catchable))
         if item_type.type == PokeBall:
             caught = item_type.get.use(opponent_pokemon, player)
@@ -329,7 +329,7 @@ class PokemonCollection():
                     "Pokemon to switch to.")
 
         pokemon = get_item(
-                "Which Pokemon do you want to use? " \
+                f"Which Pokemon do you want to use? " \
                 f"{self.available_str}: ", self.available)
         self.__collection.remove(pokemon)
         self.__collection.insert(0, pokemon)

@@ -42,13 +42,13 @@ class Pokemon:
         except KeyError:
             print('Unable to load move data.')
 
-        return cls(name = pokemon_name, hp = stats['hp'], 
+        return cls(name = pokemon_name, hp = stats['hp'],
                    attack = stats['attack'], defense = stats['defense'],
                    moves = moves)
     
     def __repr__(self):
-        return f"{self.name_str} (HP: {self.remaining_hp}/{self.hp}, \
-               Attack: {self.attack}, Defense: {self.defense})"
+        return f"{self.name_str} (HP: {self.remaining_hp}/{self.hp}, " \
+               f"Attack: {self.attack}, Defense: {self.defense})"
 
     def __init__(self, name, hp, attack, defense, moves):
         self.__name = name
@@ -151,10 +151,10 @@ class Pokemon:
                 else opponent_pokemon.remaining_hp
                 - damage)
         move.remaining_pp -= 1
-        print (f"{self.name_str} used {move.name} dealing {damage} damage. \
-               {opponent_pokemon.name_str} has \
-               {opponent_pokemon.remaining_hp}/{opponent_pokemon.hp} \
-               hp remaining.")
+        print (f'{self.name_str} used {move.name} dealing {damage} damage. ' \
+               f'{opponent_pokemon.name_str} has ' \
+               f'{opponent_pokemon.remaining_hp}/{opponent_pokemon.hp} ' \
+               f'hp remaining.')
 
 
     @property

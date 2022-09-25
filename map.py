@@ -8,7 +8,7 @@ from utility import rand_item
 
 class Square:
     """A class which represents a square on the map, which
-    has a current value and former value. 
+    has a current value and former value.
     """
     @classmethod
     def generate(cls):
@@ -17,7 +17,7 @@ class Square:
 
         Returns:
             Square: Returns a square object.
-        """        
+        """
         return cls(rand_item([
             (None, 15), (Pokemon.generate(), 6),
             (Item.generate(), 8), (NpcTrainer(), 2)
@@ -55,7 +55,7 @@ class Square:
 
 class Map:
     """A class which represents the map a player moves around on.
-    """    
+    """
     def __init__(self, rows, columns):
         self.grid = []
         for i in range(rows):
