@@ -1,11 +1,17 @@
 from random import randint, random
+
 from pokemon import Pokemon
 from utility import rand_item, get_item
+
 
 class Item:
     @classmethod
     def generate(cls):
-        return rand_item([(PokeBall(), 9), (HealthPotion(), 8), (MovePotion(), 3)])
+        return rand_item([
+            (PokeBall(), 9),
+            (HealthPotion(), 8),
+            (MovePotion(), 3)
+            ])
     
     def __init__(self):
         self.__display_str = '?'
@@ -23,6 +29,9 @@ class Item:
 
 
 class PokeBall(Item):
+    """A class extending the Item class which represents
+    a Pokeball.
+    """
     name = "Poke Ball"
 
     def __init__(self):
@@ -42,8 +51,21 @@ class PokeBall(Item):
         self.__catch_chance = catch_chance
     
     def use(self, pokemon, player):
+        """Calculates whether a pokeball object catches a pokemon,
+        and if so, adds it to pokemon collection.
+
+        Args:
+            pokemon (Pokemon): A pokemon object you are trying to catch.
+            player (Player): The player object.
+
+        Returns:
+            bool: True or False indicating whether the pokemon was caught.
+        """
         rand_num = random()
-        health_remaining_factor = (pokemon.hp - pokemon.remaining_hp) / pokemon.hp / 2
+        health_remaining_factor = (
+                (pokemon.hp-pokemon.remaining_hp)
+                / pokemon.hp
+                / 2)
         if rand_num <= self.catch_chance + (health_remaining_factor):
             player.pokemon.add(pokemon)
             print(f'Caught {pokemon.name}.')
@@ -54,6 +76,8 @@ class PokeBall(Item):
 
 
 class HealthPotion(Item):
+    """A class extending the Item class which represents a Health Potion.
+    """
     name = 'Health Potion'
 
     def __init__(self):
@@ -61,7 +85,8 @@ class HealthPotion(Item):
         self.__amount = 40
     
     def __repr__(self):
-        return f'{self.name} (restores {self.__amount} hp for selected pokemon)'
+        return f'{self.name} (restores {self.__amount} hp for \
+            selected pokemon)'
     
     # amount
     @property
@@ -73,14 +98,21 @@ class HealthPotion(Item):
         self.__amount = amount
 
     def use(self, pokemon):
-        try:
-            pokemon.remaining_hp = pokemon.remaining_hp + self.amount if (pokemon.remaining_hp + self.amount) <= pokemon.hp else pokemon.hp
-        except AttributeError:
-            print('Cannot use item on a non-pokemon object.')
+        """Restores HP to a pokemon object
+
+        Args:
+            pokemon (Pokemon): A pokemon object in your collection.
+        """
+        pokemon.remaining_hp = ((pokemon.remaining_hp + self.amount)
+                                if (pokemon.remaining_hp + self.amount)
+                                <= pokemon.hp else pokemon.hp)
 
 
 
 class MovePotion(Item):
+    """A class extending the Item class which represents a
+    Move Potion.
+    """
     name = 'Move Potion'
 
     def __init__(self):
@@ -101,8 +133,14 @@ class MovePotion(Item):
 
     
     def use(self, pokemon):
-        try:
-            move = get_item(f"Use which move? {pokemon.available_moves_str}", pokemon.available_moves)
-            move.remaining_pp = (move.remaining_pp + self.amount) if (move.remaining_pp + self.amount) <= move.pp else move.pp
-        except AttributeError:
-            print('Cannot use item on a non-pokemon object.')
+        """Restores the PP of a chosen move.
+
+        Args:
+            pokemon (Pokemon): The pokemon object.
+        """
+        move = get_item(
+                f"Use which move? {pokemon.available_moves_str}",
+                pokemon.available_moves)
+        move.remaining_pp = ((move.remaining_pp + self.amount)
+                             if (move.remaining_pp + self.amount)
+                             <= move.pp else move.pp)

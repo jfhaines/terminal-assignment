@@ -1,9 +1,6 @@
-from contextlib import AsyncExitStack
-from import_json import pokemon_data, move_data
-from random import randint
-
-
 class Move:
+    """A class representing a pokemon's move.
+    """    
     def __init__(self, name, power, pp):
         self.__name = name
         self.__power = power
@@ -11,7 +8,8 @@ class Move:
         self.__remaining_pp = pp
 
     def __repr__(self):
-        return f'{self.name} (power: {self.power}, pp: {self.remaining_pp}/{self.pp})'
+        return f'{self.name} (power: {self.power}, \
+               pp: {self.remaining_pp}/{self.pp})'
 
     # name
     @property

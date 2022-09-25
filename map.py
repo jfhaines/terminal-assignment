@@ -1,13 +1,27 @@
 from random import randint
+
 from pokemon import Pokemon
 from item import Item
 from trainer import NpcTrainer, Player
 from utility import rand_item
 
+
 class Square:
+    """A class which represents a square on the map, which
+    has a current value and former value. 
+    """
     @classmethod
     def generate(cls):
-        return cls(rand_item([(None, 15), (Pokemon.generate(), 6), (Item.generate(), 8), (NpcTrainer(), 2)]), None)
+        """Generates a square object, with its current
+        value set to a random item/pokemon/trainer.
+
+        Returns:
+            Square: Returns a square object.
+        """        
+        return cls(rand_item([
+            (None, 15), (Pokemon.generate(), 6),
+            (Item.generate(), 8), (NpcTrainer(), 2)
+            ]), None)
 
     def __init__(self, current_val, former_val):
         self.__current_val = current_val
@@ -40,6 +54,8 @@ class Square:
 
 
 class Map:
+    """A class which represents the map a player moves around on.
+    """    
     def __init__(self, rows, columns):
         self.grid = []
         for i in range(rows):
@@ -49,6 +65,18 @@ class Map:
                 row.append(Square.generate())
     
     def get(self, coordinates):
+        """Retrieves the square object at the given coordinates on
+        the map.
+
+        Args:
+            coordinates (List): A list representing coordinates.
+
+        Raises:
+            IndexError: Trying to access an invalid index.
+
+        Returns:
+            Square: A square object.
+        """
         try:
             row_num, col_num = coordinates
             return self.grid[row_num][col_num]
@@ -56,6 +84,17 @@ class Map:
             raise IndexError('Coordinates not valid.')
     
     def set(self, coordinates, value):
+        """Sets the current value of a square object at the given
+        coordinates on the map.
+
+        Args:
+            coordinates (List): A list representing coordinates.
+            value (Item/Trainer/Pokemon): Either an Item, Trainer
+            or Pokemon object.
+
+        Raises:
+            IndexError: _description_
+        """
         try:
             row_num, col_num = coordinates
             square = self.grid[row_num][col_num]
@@ -66,6 +105,8 @@ class Map:
         
 
     def display(self):
+        """Prints the map to the screen.
+        """
         try:
             for col in self.grid[0]:
                 print('----', end='')

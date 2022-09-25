@@ -5,3 +5,6 @@ class InputError(Exception):
 
 class NoneAvailableError(Exception):
     pass
+
+class NoPokemonError(Exception):
+    pass
