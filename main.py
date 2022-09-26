@@ -36,7 +36,7 @@ print("\n"
 
 map = Map(10, 10)
 
-pause.seconds(1)
+pause.seconds(0.5)
 
 player = Player()
 

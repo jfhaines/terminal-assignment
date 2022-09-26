@@ -19,8 +19,8 @@ class Square:
             Square: Returns a square object.
         """
         return cls(rand_item([
-            (None, 15), (Pokemon.generate(), 6),
-            (Item.generate(), 8), (NpcTrainer(), 2)
+            (None, 17), (Pokemon.generate(), 6),
+            (Item.generate(), 7), (NpcTrainer(), 2)
             ]), None)
 
     def __init__(self, current_val, former_val):

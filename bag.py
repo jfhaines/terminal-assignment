@@ -140,6 +140,7 @@ class ItemBag:
             caught = False
         elif item_type.type == MovePotion:
             item_type.get.use(my_pokemon)
+            caught = False
         else: 
             raise TypeError(
                     'Could not use item, item type selected ' \
@@ -289,12 +290,25 @@ class PokemonCollection():
         if len(self.available) > 0:
             return convert_list_to_prompt_str(self.available)
         else:
-            raise NoPokemonError('Trainer has no pokemon.')
+            raise NoPokemonError('Trainer has no pokemon with remaining HP.')
         
 
     @property
     def all(self):
         return self.__collection
+    
+    @property
+    def all_str(self):
+        """Returns a string which lists all pokemon,
+        and which key the user should enter to select each pokemon.
+
+        Returns:
+            String: String of pokemon.
+        """
+        if len(self.all) > 0:
+            return convert_list_to_prompt_str(self.all)
+        else:
+            raise NoPokemonError('Trainer has no pokemon.')
     
     @property
     def active(self):
