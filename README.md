@@ -1,4 +1,8 @@
 # Terminal Assignment
+
+## Link
+[GitHub](https://github.com/jfhaines/terminal-assignment)
+
 ## App Features
 This app is a Pokemon clone game that can run via the terminal application. It provides a number of features that users can take advantage of during gameplay.
 
@@ -29,14 +33,23 @@ In addition to battling wild Pokemon, you can battle other Pokemon trainers. The
 
 ## Project management
 I developed a project management plan which broke each feature down and identified the individual tasks to be completed to make each feature. This plan was implanted through the use of a Trello board. Because there were so many features in the app, with each feature containing a number of sub-tasks, I decided to create a separate column on the Trello board for each feature, and created ‘cards’ on Trello to represent each sub-task, and then assigned it to the relevant column. To create the app, I had to work on different features simultaneously, but I attempted to arrange the columns (representing the features) in order from left to right based roughly on how early in the development process their sub-tasks should be completed. I also ordered the sub-tasks in their respective columns from top to bottom in their respective order based on how early in the process each one should be completed. Features and sub tasks  that had to be completed before other features and subtasks could be started (such as building classes and assigning attributes) were generally given given shorter deadlines and given higher priority. The cards representing the tasks were each given a due date, and when the task was done, I ticked it as complete, and the due date now appeared as a green label. When a task was finished, I gave it a green ‘Done’ label to make it highly visible. I created labels to help priorities the tasks, with yellow being ‘low priority’, yellow representing ‘medium priority and red representing ‘high priority’. I also created black labels which indicate the estimated duration of each task.
-![Trello Board](images/lablels.png)
+![Trello Board](images/trello.png)
+![Trello Labels](images/labels.png)
 
 ## How to Use
 1. To run this program, you’ll need to have Python installed on your computer, in which case please go to this [link](https://www.python.org/downloads/) and follow the instructions.
-2. Clone the files from the app’s GitHub repository with the following command in your terminal: ```
-git clone git@github.com:jfhaines/terminal-assignment.git
-```
 
-1. From here, use this command to navigate to the src folder: cd src
-2. To run and play the game, use ./run.sh, you can specify the difficulty settings with command line args/flags (—hard or -h for hard, —easy or -e for easy and —normal or -n for normal). This will also download any dependencies in the requirements.txt file automatically. 
-3. To specify the number of Pokemon available in the game, use ./update.sh [arg], with arg being an integer from 1 to 905. Specifying ./update.sh 300 for example would download the first 300 Pokemon in the PokeDex into the game. If the API responsible for downloading the Pokemon data breaks, you can manually reset the Pokemon info using ./reset.sh, which will reset the available Pokemon in the game to the first 151 Pokemon in the Pokedex using a backup file stored locally.
+2. Clone the files from the app’s GitHub repository with the ```git clone git@github.com:jfhaines/terminal-assignment.git``` command in your terminal:
+
+3. From here, use the ```cd src``` command to navigate to the src folder.
+
+4. To run and play the game, use ```./run.sh```. You can specify the difficulty settings with command line args/flags (```—hard``` or ```-h``` for hard, ```—easy``` or ```-e``` for easy and ```—normal``` or ```-n``` for normal). This will also download any dependencies in the requirements.txt file automatically. 
+
+5. To specify the number of Pokemon available in the game, use ```./update.sh [arg]```, with arg being an integer from 1 to 905. Specifying ```./update.sh 300``` for example would download the first 300 Pokemon in the PokeDex into the game. If the API responsible for downloading the Pokemon data breaks, you can manually reset the Pokemon info using ./reset.sh, which will reset the available Pokemon in the game to the first 151 Pokemon in the Pokedex using a backup file stored locally.
+
+## Testing
+A number of tests were carried out to ensure the features being tested worked as intended. The process of these tests and their results can be seen below.
+![Testing Data](images/testing.png)
+
+## Style Guide
+- Pep 8
