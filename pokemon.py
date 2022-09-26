@@ -20,28 +20,33 @@ class Pokemon:
         Returns:
             Pokemon: A pokemon object.
         """
-        try:
-            pokemon_name = rand_unique_items(1, list(pokemon_data.keys()))
-            stats = pokemon_data[pokemon_name]
+        while True:
+            try:
+                pokemon_name = rand_unique_items(1, list(pokemon_data.keys()))
+                stats = pokemon_data[pokemon_name]
 
-        except KeyError:
-            print('Unable to load Pokemon.')
-            return None
+            except KeyError:
+                print('Unable to load Pokemon.')
+                return None
 
-        try:
-            available_moves = []
-            for move in pokemon_data[pokemon_name]['moves']:
-                if move in move_data:
-                    available_moves.append(move)
+            try:
+                available_moves = []
+                for move in pokemon_data[pokemon_name]['moves']:
+                    if move in move_data:
+                        available_moves.append(move)
+                if available_moves < 2:
+                    continue
 
-            moves = rand_unique_items(4, available_moves)
-            for index, move_name in list(enumerate((moves))):
-                move_stats = move_data[move_name]
-                moves[index] = Move(move_name, move_stats['power'],
-                                    move_stats['pp'])
-        
-        except KeyError:
-            print('Unable to load move data.')
+                moves = rand_unique_items(4, available_moves)
+                for index, move_name in list(enumerate((moves))):
+                    move_stats = move_data[move_name]
+                    moves[index] = Move(move_name, move_stats['power'],
+                                        move_stats['pp'])
+                break
+            
+            except KeyError:
+                print('Unable to load move data.')
+                break
 
         return cls(name = pokemon_name, hp = stats['hp'],
                    attack = stats['attack'], defense = stats['defense'],
