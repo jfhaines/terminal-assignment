@@ -65,8 +65,6 @@ class Player(Trainer):
         self.__position = [0, 0]
         self.display_str = '@'
         self.pokemon.add(Pokemon.generate())
-        self.items.add(PokeBall())
-        self.items.add(HealthPotion())
     
     # items
     @property

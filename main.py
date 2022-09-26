@@ -41,17 +41,16 @@ pause.seconds(0.5)
 player = Player()
 
 if mode == 'easy':
-    for i in range(3):
+    for i in range(2):
         player.pokemon.add(Pokemon.generate())
     for i in range(2):
         player.items.add(HealthPotion())
         player.items.add(PokeBall())
         player.items.add(MovePotion())
 elif mode == 'hard':
-        player.pokemon.add(Pokemon.generate())
+    pass
 else:
-    for i in range(2):
-        player.pokemon.add(Pokemon.generate())
+    player.pokemon.add(Pokemon.generate())
     for i in range(1):
         player.items.add(HealthPotion())
         player.items.add(PokeBall())
