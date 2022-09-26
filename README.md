@@ -3,6 +3,8 @@
 ## Link
 [GitHub](https://github.com/jfhaines/terminal-assignment)
 
+&nbsp;
+
 ## App Features
 This app is a Pokemon clone game that can run via the terminal application. It provides a number of features that users can take advantage of during gameplay.
 
@@ -30,11 +32,20 @@ During a Pokemon battle with a wild Pokemon, you can choose to use a PokeBall on
 ### Battle Trainers
 In addition to battling wild Pokemon, you can battle other Pokemon trainers. These trainer’s, similar to you, can carry multiple Pokemon, but this number will vary across trainers. Here, you’ll get to have individual Pokemon battles against their Pokemon. This battle will continue until one trainer runs out of Pokemon to use. 
 
+&nbsp;
 
 ## Project management
 I developed a project management plan which broke each feature down and identified the individual tasks to be completed to make each feature. This plan was implanted through the use of a Trello board. Because there were so many features in the app, with each feature containing a number of sub-tasks, I decided to create a separate column on the Trello board for each feature, and created ‘cards’ on Trello to represent each sub-task, and then assigned it to the relevant column. To create the app, I had to work on different features simultaneously, but I attempted to arrange the columns (representing the features) in order from left to right based roughly on how early in the development process their sub-tasks should be completed. I also ordered the sub-tasks in their respective columns from top to bottom in their respective order based on how early in the process each one should be completed. Features and sub tasks  that had to be completed before other features and subtasks could be started (such as building classes and assigning attributes) were generally given given shorter deadlines and given higher priority. The cards representing the tasks were each given a due date, and when the task was done, I ticked it as complete, and the due date now appeared as a green label. When a task was finished, I gave it a green ‘Done’ label to make it highly visible. I created labels to help priorities the tasks, with yellow being ‘low priority’, yellow representing ‘medium priority and red representing ‘high priority’. I also created black labels which indicate the estimated duration of each task.
+
+&nbsp;
+
 ![Trello Board](images/trello.png)
+
+&nbsp;
+
 ![Trello Labels](images/labels.png)
+
+&nbsp;
 
 ## How to Use
 1. To run this program, you’ll need to have Python installed on your computer, in which case please go to this [link](https://www.python.org/downloads/) and follow the instructions.
@@ -47,9 +58,16 @@ I developed a project management plan which broke each feature down and identifi
 
 5. To specify the number of Pokemon available in the game, use ```./update.sh [arg]```, with arg being an integer from 1 to 905. Specifying ```./update.sh 300``` for example would download the first 300 Pokemon in the PokeDex into the game. If the API responsible for downloading the Pokemon data breaks, you can manually reset the Pokemon info using ./reset.sh, which will reset the available Pokemon in the game to the first 151 Pokemon in the Pokedex using a backup file stored locally.
 
+&nbsp;
+
 ## Testing
 A number of tests were carried out to ensure the features being tested worked as intended. The process of these tests and their results can be seen below.
+
+&nbsp;
+
 ![Testing Data](images/testing.png)
+
+&nbsp;
 
 ## Style Guide
 - Pep 8
