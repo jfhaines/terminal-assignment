@@ -1,6 +1,7 @@
-from random import randint
-
 import pokebase as pb
+import pause
+
+from random import randint
 
 from import_json import pokemon_data, move_data
 from moves import Move
@@ -151,10 +152,12 @@ class Pokemon:
                 else opponent_pokemon.remaining_hp
                 - damage)
         move.remaining_pp -= 1
+        pause.milliseconds(800)
         print (f'{self.name_str} used {move.name} dealing {damage} damage. ' \
                f'{opponent_pokemon.name_str} has ' \
                f'{opponent_pokemon.remaining_hp}/{opponent_pokemon.hp} ' \
                f'hp remaining.')
+        pause.milliseconds(800)
 
 
     @property
@@ -188,7 +191,7 @@ class Pokemon:
     def all_moves_str(self):
         """Returns a string of all moves, and shows the user what key
         to press to
-        select each move. 
+        select each move.
 
         Returns:
             String: A string consisting of all moves.

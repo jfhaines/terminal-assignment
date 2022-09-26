@@ -1,6 +1,7 @@
 from random import randint
 
 import names
+import pause
 
 from pokemon import Pokemon
 from item import PokeBall, HealthPotion, MovePotion, Item
@@ -206,10 +207,9 @@ class Player(Trainer):
         Args:
             map (Map): The map object.
             new_position (List): A list representing coordinates.
-        """        
+        """
         map.set(new_position, self)
-        map.set(
-                self.position, 
+        map.set(self.position,
                 (None 
                 if not isinstance(map.get(self.position).former_val, Pokemon)
                 else Pokemon.generate()))
@@ -278,6 +278,7 @@ class Player(Trainer):
                         self.change_square(map, new_position)
                         map.display()
                         if rand_item([(True, 1), (False, 2)]) == True:
+                            pause.milliseconds(800)
                             print(f'A wild {map.get(self.position).former_val} ' \
                                   f'appeared.')
                             self.pokemon_battle(

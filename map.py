@@ -108,6 +108,7 @@ class Map:
         """Prints the map to the screen.
         """
         try:
+            print('\n')
             for col in self.grid[0]:
                 print('----', end='')
             print('---\n')
@@ -123,4 +124,3 @@ class Map:
     
     def clear_square(self, coordinates):
         self.set(coordinates, None)
-

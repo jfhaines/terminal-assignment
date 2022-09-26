@@ -1,13 +1,10 @@
-from item import Item, PokeBall, HealthPotion, MovePotion
-from map import Map, Square
+from item import PokeBall, HealthPotion, MovePotion
+from map import Map
 from moves import Move
 from pokemon import Pokemon
-from trainer import NpcTrainer, Player
-from randomizer import RandomList
-from utility import rand_unique_items, get_item, convert_list_to_prompt_str
-from import_json import pokemon_data
-from bag import ItemBag
+from trainer import Player
 import sys
+import pause
 
 
 mode = 'normal'
@@ -35,9 +32,12 @@ print("\n"
       "to try and catch them. The lower the opponent Pokemon's HP, the more " \
       "likely you are to catch them. Once caught, the Pokemon will be " \
       "added to your collection, and you can switch to it in battle. "
-      "If you have no pokemon with HP remaining, the game ends. Good luck!")
+      "If you have no pokemon with HP remaining, the game ends. Good luck! \n")
 
 map = Map(10, 10)
+
+pause.seconds(1)
+
 player = Player()
 
 if mode == 'easy':

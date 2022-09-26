@@ -1,4 +1,6 @@
-from random import randint, random
+import pause
+
+from random import random
 
 from pokemon import Pokemon
 from utility import rand_item, get_item
@@ -68,10 +70,14 @@ class PokeBall(Item):
                 / 2)
         if rand_num <= self.catch_chance + (health_remaining_factor):
             player.pokemon.add(pokemon)
+            pause.milliseconds(800)
             print(f'Caught {pokemon.name}.')
+            pause.milliseconds(800)
             return True
         else:
+            pause.milliseconds(800)
             print(f'Failed to catch {pokemon.name}.')
+            pause.milliseconds(800)
             return False
 
 
@@ -105,7 +111,8 @@ class HealthPotion(Item):
         """
         pokemon.remaining_hp = ((pokemon.remaining_hp + self.amount)
                                 if (pokemon.remaining_hp + self.amount)
-                                <= pokemon.hp else pokemon.hp)
+                                <= pokemon.hp 
+                                else pokemon.hp)
 
 
 
@@ -139,8 +146,9 @@ class MovePotion(Item):
             pokemon (Pokemon): The pokemon object.
         """
         move = get_item(
-                f"Use which move? {pokemon.available_moves_str}",
-                pokemon.available_moves)
+                f"Use move potion on which move? {pokemon.all_moves_str}: ",
+                pokemon.moves)
         move.remaining_pp = ((move.remaining_pp + self.amount)
                              if (move.remaining_pp + self.amount)
-                             <= move.pp else move.pp)
+                             <= move.pp 
+                             else move.pp)

@@ -1,3 +1,5 @@
+import pause
+
 from pokemon import Pokemon
 from item import PokeBall, HealthPotion, MovePotion
 from custom_exceptions import NoneAvailableError, NoPokemonError
@@ -141,7 +143,9 @@ class ItemBag:
                     'Could not use item, item type selected ' \
                     'is not supported.')
         item_type.remove()
+        pause.milliseconds(800)
         print(f'Used {item_type.type.name}.')
+        pause.milliseconds(800)
         return caught
 
 
@@ -273,18 +277,17 @@ class PokemonCollection():
         return available
     
     @property
-    def available_str(self):
-        """Returns a string which lists all available pokemon,
+    def all_str(self):
+        """Returns a string which lists all pokemon,
         and which key the user should enter to select each pokemon.
 
         Returns:
-            String: String of available pokemon.
-        """    
-        if self.count_available > 0:
-            prompt_string = convert_list_to_prompt_str(self.available)
-            return prompt_string
+            String: String of pokemon.
+        """
+        if self.all > 0:
+            return convert_list_to_prompt_str(self.all)
         else:
-            raise NoPokemonError('No pokemon are available.')
+            raise NoPokemonError('Trainer has no pokemon.')
         
 
     @property
@@ -319,18 +322,17 @@ class PokemonCollection():
     def switch(self):
         """Asks the user to select a pokemon, and changes the
         active pokemon to that pokemon.
-
-        Raises:
-            NoneAvailableError: No pokemon are available.
         """
-        if self.count_available <= 1:
+        if self.all <= 1:
             raise NoneAvailableError(
                     "You don't have another " \
                     "Pokemon to switch to.")
 
         pokemon = get_item(
                 f"Which Pokemon do you want to use? " \
-                f"{self.available_str}: ", self.available)
+                f"{self.all_str}: ", self.all)
         self.__collection.remove(pokemon)
         self.__collection.insert(0, pokemon)
+        pause.milliseconds(800)
         print(f"Switched to {self.active.name}.")
+        pause.milliseconds(800)
