@@ -39,13 +39,15 @@ I developed a project management plan which broke each feature down and identifi
 ## How to Use
 1. To run this program, you’ll need to have Python installed on your computer. If you don't please go to this [link](https://www.python.org/downloads/) and follow the instructions.
 
-2. Clone the files from the app’s GitHub repository with the ```git clone git@github.com:jfhaines/terminal-assignment.git``` command in your terminal:
+2. Install Pip on your computer.
 
-3. From here, use the ```cd terminal-assignment``` command to navigate to the src folder.
+3. Clone the files from the app’s GitHub repository with the ```git clone git@github.com:jfhaines/terminal-assignment.git``` command in your terminal:
 
-4. To run and play the game, use ```./run.sh```. You can specify the difficulty settings with command line args/flags (```-—hard``` or ```-h``` for hard, ```—-easy``` or ```-e``` for easy and ```—-normal``` or ```-n``` for normal). This will also download any dependencies in the requirements.txt file automatically.
+4. From here, use the ```cd terminal-assignment``` command to navigate to the src folder.
 
-5. To specify the number of Pokemon available in the game, use ```./update.sh [arg]```, with arg being an integer from 1 to 905. Specifying ```./update.sh 300``` for example would download the first 300 Pokemon in the PokeDex into the game. If the API responsible for downloading the Pokemon data breaks, you can manually reset the Pokemon info using ```./reset.sh```, which will reset the available Pokemon in the game to the first 151 Pokemon in the Pokedex using a backup file stored locally.
+5. To run and play the game, use ```./run.sh```. You have to specify the difficulty settings with command line args/flags (```-—hard``` or ```-h``` for hard, ```—-easy``` or ```-e``` for easy and ```—-normal``` or ```-n``` for normal). This will also download any dependencies in the requirements.txt file automatically. E.g. ```./run.sh -h```
+
+6. To specify the number of Pokemon available in the game, use ```./update.sh [arg]```, with arg being an integer from 1 to 905. Specifying ```./update.sh 300``` for example would download the first 300 Pokemon in the PokeDex into the game. If the API responsible for downloading the Pokemon data breaks, you can manually reset the Pokemon info using ```./reset.sh```, which will reset the available Pokemon in the game to the first 151 Pokemon in the Pokedex using a backup file stored locally.
 
 ## Testing
 A number of manual tests were carried out to ensure the features being tested worked as intended. The process of these tests and their results can be seen below.
