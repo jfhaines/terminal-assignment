@@ -267,11 +267,13 @@ class Player(Trainer):
                 try:
                     adj_square = map.get(new_position)
 
+                    # Item
                     if isinstance(adj_square.current_val, Item):
                         self.items.pickup(
                                 adj_square.current_val,
                                 map, new_position)
                     
+                    # Grass patch (pokemon)
                     elif isinstance(adj_square.current_val, Pokemon):
                         self.change_square(map, new_position)
                         map.display()
@@ -283,6 +285,7 @@ class Player(Trainer):
                         else:
                             continue
                     
+                    # NPC Trainer
                     elif isinstance(adj_square.current_val, NpcTrainer):
                         if self.trainer_battle(adj_square.current_val) == 'Won':
                             map.set(new_position, None)
