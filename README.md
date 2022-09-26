@@ -41,7 +41,7 @@ I developed a project management plan which broke each feature down and identifi
 
 2. Clone the files from the app’s GitHub repository with the ```git clone git@github.com:jfhaines/terminal-assignment.git``` command in your terminal:
 
-3. From here, use the ```cd src``` command to navigate to the src folder.
+3. From here, use the ```cd terminal-assignment``` command to navigate to the src folder.
 
 4. To run and play the game, use ```./run.sh```. You can specify the difficulty settings with command line args/flags (```-—hard``` or ```-h``` for hard, ```—-easy``` or ```-e``` for easy and ```—-normal``` or ```-n``` for normal). This will also download any dependencies in the requirements.txt file automatically.
 
