@@ -34,7 +34,7 @@ class Pokemon:
                 for move in pokemon_data[pokemon_name]['moves']:
                     if move in move_data:
                         available_moves.append(move)
-                if available_moves < 2:
+                if len(available_moves) < 2:
                     continue
 
                 moves = rand_unique_items(4, available_moves)

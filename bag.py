@@ -112,7 +112,7 @@ class ItemBag:
         else:
             raise NoneAvailableError('There are no item types available.')
     
-    def use(self, my_pokemon, opponent_pokemon=None, player=None):
+    def use(self, my_pokemon, player, opponent_pokemon=None):
         """Asks user to select item, then uses it on a Pokemon.
 
         Args:
@@ -135,9 +135,11 @@ class ItemBag:
                 self.available(is_catchable))
         if item_type.type == PokeBall:
             caught = item_type.get.use(opponent_pokemon, player)
-        elif item_type.type == HealthPotion or item_type.type == MovePotion:
-            item_type.get.use(my_pokemon)
+        elif item_type.type == HealthPotion:
+            item_type.get.use(player)
             caught = False
+        elif item_type.type == MovePotion:
+            item_type.get.use(my_pokemon)
         else: 
             raise TypeError(
                     'Could not use item, item type selected ' \
@@ -277,15 +279,15 @@ class PokemonCollection():
         return available
     
     @property
-    def all_str(self):
-        """Returns a string which lists all pokemon,
+    def available_str(self):
+        """Returns a string which lists available pokemon,
         and which key the user should enter to select each pokemon.
 
         Returns:
             String: String of pokemon.
         """
-        if self.all > 0:
-            return convert_list_to_prompt_str(self.all)
+        if len(self.available) > 0:
+            return convert_list_to_prompt_str(self.available)
         else:
             raise NoPokemonError('Trainer has no pokemon.')
         
@@ -323,14 +325,14 @@ class PokemonCollection():
         """Asks the user to select a pokemon, and changes the
         active pokemon to that pokemon.
         """
-        if self.all <= 1:
+        if len(self.available) <= 1:
             raise NoneAvailableError(
                     "You don't have another " \
                     "Pokemon to switch to.")
 
         pokemon = get_item(
                 f"Which Pokemon do you want to use? " \
-                f"{self.all_str}: ", self.all)
+                f"{self.available_str}: ", self.available)
         self.__collection.remove(pokemon)
         self.__collection.insert(0, pokemon)
         pause.milliseconds(800)

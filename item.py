@@ -10,9 +10,9 @@ class Item:
     @classmethod
     def generate(cls):
         return rand_item([
-            (PokeBall(), 9),
-            (HealthPotion(), 8),
-            (MovePotion(), 3)
+            (PokeBall(), 4),
+            (HealthPotion(), 4),
+            (MovePotion(), 2)
             ])
     
     def __init__(self):
@@ -103,15 +103,18 @@ class HealthPotion(Item):
     def amount(self, amount):
         self.__amount = amount
 
-    def use(self, pokemon):
+    def use(self, player):
         """Restores HP to a pokemon object
 
         Args:
             pokemon (Pokemon): A pokemon object in your collection.
         """
+        pokemon = get_item(
+                f"Which pokemon do you want to use it on? {player.pokemon.all_str}: ",
+                player.pokemon.all)
         pokemon.remaining_hp = ((pokemon.remaining_hp + self.amount)
                                 if (pokemon.remaining_hp + self.amount)
-                                <= pokemon.hp 
+                                <= pokemon.hp
                                 else pokemon.hp)
 
 

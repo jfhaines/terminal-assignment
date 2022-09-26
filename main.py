@@ -6,8 +6,6 @@ from trainer import Player
 import sys
 import pause
 
-import pokebase as pb
-
 
 mode = 'normal'
 arg = sys.argv[1]

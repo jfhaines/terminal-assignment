@@ -129,13 +129,13 @@ class Player(Trainer):
                 elif option == '1':
                     if is_catchable:
                         caught = self.items.use(
-                                my_pokemon, opponent_pokemon, self)
+                                my_pokemon, self, opponent_pokemon)
                         if caught == True:
                             return 'Exit'
                         else:
                             continue
                     else:
-                        self.items.use(my_pokemon)
+                        self.items.use(my_pokemon, self)
                         continue
 
                 elif option == '2':
