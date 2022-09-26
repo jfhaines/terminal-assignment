@@ -6,4 +6,4 @@ echo "Checking and/or installing necessary files."
 
 pip install -r requirements.txt
 
-python main.py --b
+python3 main.py $1

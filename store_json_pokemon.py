@@ -1,12 +1,21 @@
 import json
+import sys
 
 import pokebase as pb
 
+arg = sys.argv[1]
+
+if arg.isdigit():
+    arg = int(arg)
+else:
+    sys.exit("Invalid argument: Has to be an integer above 0 and below 905.")
+
+pokemon_index = arg
 
 # pokemon list
 def get_pokemon_info():
     pokemon = {}
-    for i in range(1, 151):
+    for i in range(1, pokemon_index):
         pokemon_info = pb.pokemon(i)
         name = pokemon_info.name
         hp = pokemon_info.stats[0].base_stat
@@ -20,23 +29,8 @@ def get_pokemon_info():
     return pokemon
 
 
-# moves list
-def get_move_info():
-    moves = {}
-    for i in range(1, 827):
-        move_info = pb.move(i)
-        if isinstance(move_info.power, int):
-            moves[move_info.name] = {'power': move_info.power, 'pp': move_info.pp}
-    return moves
-
-
 
 # store JSON data
 json_pokemon = json.dumps(get_pokemon_info())
 with open('pokemon-info.json', 'w') as f:
     f.write(json_pokemon)
-
-
-json_moves = json.dumps(get_move_info())
-with open('moves-info.json', 'w') as f:
-    f.write(json_moves)
